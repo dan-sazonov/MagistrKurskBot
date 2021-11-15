@@ -1,8 +1,9 @@
 import logging
 import os
+
 from aiogram import Bot, Dispatcher
+
 from filters import IsOwnerFilter, IsAdminFilter, MemberCanRestrictFilter
-import config
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -11,7 +12,6 @@ logging.basicConfig(level=logging.INFO)
 API_TOKEN = os.getenv('BOT_TOKEN')
 if not API_TOKEN:
     exit('Err: BOT_TOKEN variable is missing')
-
 
 # init
 bot = Bot(token=API_TOKEN, parse_mode="HTML")
