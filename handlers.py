@@ -10,6 +10,8 @@ from dispatcher import dp, bot
 from messages import Messages
 
 messages = Messages()
+mes_songs = Messages.Songs()
+mes_contacts = Messages.Contacts()
 
 
 async def start_message(_):
@@ -20,6 +22,16 @@ async def stop_message(_):
     await bot.send_message(chat_id=config.ADMIN_CHAT, text=messages.stop_polling)
 
 
+@dp.message_handler(commands='songs')
+async def statuses_messages(message: types.Message):
+    await message.answer('songs')
+
+
+@dp.message_handler(commands='contacts')
+async def statuses_messages(message: types.Message):
+    await message.answer('contacts')
+
+
 @dp.message_handler()
 async def echo(message: types.Message):
     """
@@ -27,7 +39,6 @@ async def echo(message: types.Message):
     :param message: Параметры сообщения, которое прилетело от юзера
     :return: None
     """
-    if not config.ENABLE_ECHO:
-        return
-    await message.reply(message.text)
-    await message.answer(f'usr id: {message.from_user.id}')
+    if config.ENABLE_ECHO:
+        await message.reply(message.text)
+        await message.answer(f'usr id: {message.from_user.id}')
