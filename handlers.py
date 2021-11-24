@@ -12,6 +12,7 @@ from messages import Messages
 messages = Messages()
 mes_songs = Messages.Songs()
 mes_contacts = Messages.Contacts()
+mes_howto = Messages.HowTo()
 
 
 async def start_message(_):
@@ -30,6 +31,11 @@ async def statuses_messages(message: types.Message):
 @dp.message_handler(commands='contacts')
 async def statuses_messages(message: types.Message):
     await message.answer('contacts')
+
+
+@dp.message_handler(commands='howto')
+async def statuses_messages(message: types.Message):
+    await message.answer(mes_howto.mes_text)
 
 
 @dp.message_handler()
