@@ -13,6 +13,7 @@ messages = Messages()
 mes_songs = Messages.Songs()
 mes_contacts = Messages.Contacts()
 mes_howto = Messages.HowTo()
+mes_team = Messages.Team()
 
 
 async def start_message(_):
@@ -36,6 +37,11 @@ async def statuses_messages(message: types.Message):
 @dp.message_handler(commands='howto')
 async def statuses_messages(message: types.Message):
     await message.answer(mes_howto.mes_text)
+
+
+@dp.message_handler(commands='team')
+async def statuses_messages(message: types.Message):
+    await message.answer(mes_team.mes_text)
 
 
 @dp.message_handler()
