@@ -12,6 +12,10 @@ from filters import IsOwnerFilter, IsAdminFilter, MemberCanRestrictFilter
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
+# кастомные костыльные логи
+if config.ENABLE_ECHO:
+    print('INFO: echo mode enable')
+
 # init
 TOKEN = config.API_TOKEN
 bot = Bot(token=TOKEN, parse_mode="HTML")
