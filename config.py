@@ -8,6 +8,8 @@ import os
 ADMIN_ID = {385056286, }
 ADMIN_CHAT = 385056286
 
+ENABLE_ECHO = False  # все команды будут попадать в эхо
+
 # prerequisites
 API_TOKEN = os.getenv('BOT_TOKEN')
 if not API_TOKEN:
