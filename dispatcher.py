@@ -1,5 +1,9 @@
+"""
+Создает и настраивает бота
+Все, что связано с обработкой сообщений, должно быть помещено в `handlers.py`.
+"""
 import logging
-import os
+import config
 
 from aiogram import Bot, Dispatcher
 
@@ -8,13 +12,9 @@ from filters import IsOwnerFilter, IsAdminFilter, MemberCanRestrictFilter
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
-# prerequisites
-API_TOKEN = os.getenv('BOT_TOKEN')
-if not API_TOKEN:
-    exit('Err: BOT_TOKEN variable is missing')
-
 # init
-bot = Bot(token=API_TOKEN, parse_mode="HTML")
+TOKEN = config.API_TOKEN
+bot = Bot(token=TOKEN, parse_mode="HTML")
 dp = Dispatcher(bot)
 
 # activate filters

@@ -1,3 +1,7 @@
+"""
+Думаешь, я сам знаю, что тут происходит? Вперед гуглить
+"""
+
 from aiogram import types
 from aiogram.dispatcher.filters import BoundFilter
 
