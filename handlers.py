@@ -5,6 +5,17 @@
 """
 
 import config
-import messages
+from aiogram import types
+from dispatcher import dp, bot
+from messages import Messages
 
-pass
+messages = Messages()
+
+
+async def start_message(_):
+    await bot.send_message(chat_id=config.ADMIN_CHAT, text=messages.start_polling)
+
+
+async def stop_message(_):
+    await bot.send_message(chat_id=config.ADMIN_CHAT, text=messages.stop_polling)
+
