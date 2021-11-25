@@ -46,6 +46,20 @@ async def statuses_messages(message: types.Message):
     await message.answer(mes_team.mes_text)
 
 
+@dp.message_handler(commands=['subscribe', 'start'])
+async def statuses_messages(message: types.Message):
+    # todo добавляем чела в бд к активным, если его там еще нет
+    await message.answer(messages.subscribe)
+    await message.answer(messages.do_unsubscribe)
+
+
+@dp.message_handler(commands=['unsubscribe', 'stop'])
+async def statuses_messages(message: types.Message):
+    # todo удалем чела из активных, если он еще там
+    await message.answer(messages.unsubscribe)
+    await message.answer(messages.do_subscribe)
+
+
 @dp.message_handler()
 async def echo(message: types.Message):
     """
