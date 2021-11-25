@@ -148,3 +148,6 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# other
+memes/log_memes.txt

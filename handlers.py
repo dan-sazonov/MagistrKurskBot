@@ -6,6 +6,7 @@
 
 import config
 import dispatcher
+import features
 
 from dispatcher import dp, bot
 from messages import Messages
@@ -44,6 +45,11 @@ async def statuses_messages(message: types.Message):
 @dp.message_handler(commands='team')
 async def statuses_messages(message: types.Message):
     await message.answer(mes_team.mes_text)
+
+
+@dp.message_handler(commands='memes')
+async def statuses_messages(message: types.Message):
+    await message.answer_photo(types.InputFile(features.get_memes()))
 
 
 @dp.message_handler(commands=['subscribe', 'start'])
