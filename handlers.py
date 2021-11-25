@@ -33,7 +33,7 @@ async def process_command_1(message: types.Message):
 
 @dp.message_handler(commands='contacts')
 async def statuses_messages(message: types.Message):
-    await message.answer('contacts')
+    await message.answer(mes_contacts.mes_text, reply_markup=dispatcher.contacts_kb)
 
 
 @dp.message_handler(commands='howto')
