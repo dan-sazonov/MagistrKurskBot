@@ -50,9 +50,12 @@ async def statuses_messages(message: types.Message):
 async def echo(message: types.Message):
     """
     Пересылаем все сообщения и айдишник юзеру, чисто для тестов
+    Если эхо выключено, шлем сообщение, что команда не понятна
     :param message: Параметры сообщения, которое прилетело от юзера
     :return: None
     """
     if config.ENABLE_ECHO:
         await message.reply(message.text)
         await message.answer(f'usr id: {message.from_user.id}')
+    else:
+        await message.reply(messages.not_command)
