@@ -60,6 +60,11 @@ async def statuses_messages(message: types.Message):
     await message.answer(messages.do_subscribe)
 
 
+@dp.message_handler(commands=['help', '!', '?'])
+async def statuses_messages(message: types.Message):
+    await message.answer(messages.help)
+
+
 @dp.message_handler()
 async def echo(message: types.Message):
     """
