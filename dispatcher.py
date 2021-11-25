@@ -4,10 +4,13 @@
 """
 import logging
 import config
-
-from aiogram import Bot, Dispatcher
+import aiogram
+import messages
 
 from filters import IsOwnerFilter, IsAdminFilter, MemberCanRestrictFilter
+
+mes_songs = messages.Messages.Songs()
+mes_contacts = messages.Messages.Contacts()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -18,10 +21,15 @@ if config.ENABLE_ECHO:
 
 # init
 TOKEN = config.API_TOKEN
-bot = Bot(token=TOKEN, parse_mode="HTML")
-dp = Dispatcher(bot)
+bot = aiogram.Bot(token=TOKEN, parse_mode="HTML")
+dp = aiogram.Dispatcher(bot)
 
 # activate filters
 dp.filters_factory.bind(IsOwnerFilter)
 dp.filters_factory.bind(IsAdminFilter)
 dp.filters_factory.bind(MemberCanRestrictFilter)
+
+# создаем клавы с кнопками
+songs_kb = aiogram.types.InlineKeyboardMarkup()
+songs_kb.add(aiogram.types.InlineKeyboardButton(mes_songs.web_text, url=mes_songs.web_link))
+songs_kb.add(aiogram.types.InlineKeyboardButton(mes_songs.app_text, url=mes_songs.app_link))

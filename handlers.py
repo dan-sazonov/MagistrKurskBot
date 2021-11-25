@@ -5,9 +5,11 @@
 """
 
 import config
-from aiogram import types
+import dispatcher
+
 from dispatcher import dp, bot
 from messages import Messages
+from aiogram import types
 
 messages = Messages()
 mes_songs = Messages.Songs()
@@ -25,8 +27,8 @@ async def stop_message(_):
 
 
 @dp.message_handler(commands='songs')
-async def statuses_messages(message: types.Message):
-    await message.answer('songs')
+async def process_command_1(message: types.Message):
+    await message.answer(mes_songs.mes_text, reply_markup=dispatcher.songs_kb)
 
 
 @dp.message_handler(commands='contacts')
