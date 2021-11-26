@@ -7,6 +7,7 @@
 import config
 import dispatcher
 import features
+import db
 
 from dispatcher import dp, bot
 from messages import Messages
@@ -17,6 +18,7 @@ mes_songs = Messages.Songs()
 mes_contacts = Messages.Contacts()
 mes_howto = Messages.HowTo()
 mes_team = Messages.Team()
+db_main = db.Main()
 
 
 async def start_message(_):
@@ -54,14 +56,14 @@ async def statuses_messages(message: types.Message):
 
 @dp.message_handler(commands=['subscribe', 'start'])
 async def statuses_messages(message: types.Message):
-    # todo добавляем чела в бд к активным, если его там еще нет
+    db_main.add_user(int(message.from_user.id), message.from_user.username)
     await message.answer(messages.subscribe)
     await message.answer(messages.do_unsubscribe)
 
 
 @dp.message_handler(commands=['unsubscribe', 'stop'])
 async def statuses_messages(message: types.Message):
-    # todo удалем чела из активных, если он еще там
+    db_main.del_user(int(message.from_user.id))
     await message.answer(messages.unsubscribe)
     await message.answer(messages.do_subscribe)
 
