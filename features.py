@@ -1,3 +1,7 @@
+"""
+Фичи общего назначения, которые не получилось запихнуть в другие файлы
+"""
+
 import random
 import os
 from collections import deque
