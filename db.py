@@ -21,7 +21,7 @@ class Main:
                        "messages INTEGER)")
         db.commit()
 
-    def add_user(self, user_id, username):
+    def add_user(self, user_id: int, username: str) -> None:
         """
         Добавляет юзера в бд, если он еще не добавлен
         :param user_id: telegram id юзера
@@ -34,7 +34,7 @@ class Main:
                                 (user_id, username, datetime.datetime.now(), 0))
         self.db.commit()
 
-    def del_user(self, user_id):
+    def del_user(self, user_id: int) -> None:
         """
         Удаляет юзера из бд, если он еще там
         :param user_id: telegram id юзера
@@ -46,7 +46,7 @@ class Main:
 
         self.db.commit()
 
-    def update_counter(self, user_id, count=1):
+    def update_counter(self, user_id: int, count=1) -> None:
         """
         Изменяет количество отправленных сообщениий
         :param user_id: telegram id юзера
