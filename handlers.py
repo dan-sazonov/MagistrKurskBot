@@ -18,6 +18,7 @@ mes_songs = Messages.Songs()
 mes_contacts = Messages.Contacts()
 mes_howto = Messages.HowTo()
 mes_team = Messages.Team()
+mes_credits = Messages.Credits()
 db_main = db.Main()
 
 
@@ -57,6 +58,12 @@ async def team_mes(message: types.Message):
 async def memes_mes(message: types.Message):
     db_main.update_counter(int(message.from_user.id))
     await message.answer_photo(types.InputFile(features.get_memes()))
+
+
+@dp.message_handler(commands=['credits'])
+async def memes_mes(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
+    await message.answer(mes_credits.mes_text)
 
 
 @dp.message_handler(commands=['subscribe', 'start'])
