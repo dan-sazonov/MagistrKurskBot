@@ -7,6 +7,7 @@
 import config
 import dispatcher
 import features
+import db
 
 from dispatcher import dp, bot
 from messages import Messages
@@ -17,6 +18,7 @@ mes_songs = Messages.Songs()
 mes_contacts = Messages.Contacts()
 mes_howto = Messages.HowTo()
 mes_team = Messages.Team()
+db_main = db.Main()
 
 
 async def start_message(_):
@@ -27,52 +29,60 @@ async def stop_message(_):
     await bot.send_message(chat_id=config.ADMIN_CHAT, text=messages.stop_polling)
 
 
-@dp.message_handler(commands='songs')
-async def process_command_1(message: types.Message):
+@dp.message_handler(commands=['songs'])
+async def songs_mes(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
     await message.answer(mes_songs.mes_text, reply_markup=dispatcher.songs_kb)
 
 
-@dp.message_handler(commands='contacts')
-async def statuses_messages(message: types.Message):
+@dp.message_handler(commands=['contacts'])
+async def contacts_mes(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
     await message.answer(mes_contacts.mes_text, reply_markup=dispatcher.contacts_kb)
 
 
-@dp.message_handler(commands='howto')
-async def statuses_messages(message: types.Message):
+@dp.message_handler(commands=['howto'])
+async def howto_mes(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
     await message.answer(mes_howto.mes_text)
 
 
-@dp.message_handler(commands='team')
-async def statuses_messages(message: types.Message):
+@dp.message_handler(commands=['team'])
+async def team_mes(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
     await message.answer(mes_team.mes_text)
 
 
-@dp.message_handler(commands='memes')
-async def statuses_messages(message: types.Message):
+@dp.message_handler(commands=['memes'])
+async def memes_mes(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
     await message.answer_photo(types.InputFile(features.get_memes()))
 
 
 @dp.message_handler(commands=['subscribe', 'start'])
-async def statuses_messages(message: types.Message):
-    # todo добавляем чела в бд к активным, если его там еще нет
+async def start_mes(message: types.Message):
+    db_main.add_user(int(message.from_user.id), message.from_user.username)
+    db_main.update_counter(int(message.from_user.id))
     await message.answer(messages.subscribe)
     await message.answer(messages.do_unsubscribe)
 
 
 @dp.message_handler(commands=['unsubscribe', 'stop'])
-async def statuses_messages(message: types.Message):
-    # todo удалем чела из активных, если он еще там
+async def stop_mes(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
+    db_main.del_user(int(message.from_user.id))
     await message.answer(messages.unsubscribe)
     await message.answer(messages.do_subscribe)
 
 
 @dp.message_handler(commands=['help', '!', '?'])
-async def statuses_messages(message: types.Message):
+async def help_mes(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
     await message.answer(messages.help)
 
 
 @dp.message_handler()
-async def echo(message: types.Message):
+async def unknown_command_mes(message: types.Message):
     """
     Пересылаем все сообщения и айдишник юзеру, чисто для тестов
     Если эхо выключено, шлем сообщение, что команда не понятна
@@ -83,4 +93,5 @@ async def echo(message: types.Message):
         await message.reply(message.text)
         await message.answer(f'usr id: {message.from_user.id}')
     else:
+        db_main.update_counter(int(message.from_user.id))
         await message.reply(messages.not_command)
