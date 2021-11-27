@@ -46,6 +46,16 @@ class Main:
 
         self.db.commit()
 
+    def update_counter(self, user_id, count=1):
+        """
+        Изменяет количество отправленных сообщениий
+        :param user_id: telegram id юзера
+        :param count: инкремент, по дефолту 1
+        :return: None
+        """
+        self.cursor.execute(f"UPDATE users SET messages = messages + {count} WHERE id = {user_id}")
+        self.db.commit()
+
 
 class Santa:
     """

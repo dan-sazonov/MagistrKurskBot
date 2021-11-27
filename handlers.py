@@ -31,38 +31,45 @@ async def stop_message(_):
 
 @dp.message_handler(commands='songs')
 async def process_command_1(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
     await message.answer(mes_songs.mes_text, reply_markup=dispatcher.songs_kb)
 
 
 @dp.message_handler(commands='contacts')
 async def statuses_messages(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
     await message.answer(mes_contacts.mes_text, reply_markup=dispatcher.contacts_kb)
 
 
 @dp.message_handler(commands='howto')
 async def statuses_messages(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
     await message.answer(mes_howto.mes_text)
 
 
 @dp.message_handler(commands='team')
 async def statuses_messages(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
     await message.answer(mes_team.mes_text)
 
 
 @dp.message_handler(commands='memes')
 async def statuses_messages(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
     await message.answer_photo(types.InputFile(features.get_memes()))
 
 
 @dp.message_handler(commands=['subscribe', 'start'])
 async def statuses_messages(message: types.Message):
     db_main.add_user(int(message.from_user.id), message.from_user.username)
+    db_main.update_counter(int(message.from_user.id))
     await message.answer(messages.subscribe)
     await message.answer(messages.do_unsubscribe)
 
 
 @dp.message_handler(commands=['unsubscribe', 'stop'])
 async def statuses_messages(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
     db_main.del_user(int(message.from_user.id))
     await message.answer(messages.unsubscribe)
     await message.answer(messages.do_subscribe)
@@ -70,6 +77,7 @@ async def statuses_messages(message: types.Message):
 
 @dp.message_handler(commands=['help', '!', '?'])
 async def statuses_messages(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
     await message.answer(messages.help)
 
 
@@ -85,4 +93,5 @@ async def echo(message: types.Message):
         await message.reply(message.text)
         await message.answer(f'usr id: {message.from_user.id}')
     else:
+        db_main.update_counter(int(message.from_user.id))
         await message.reply(messages.not_command)
