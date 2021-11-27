@@ -19,13 +19,13 @@ def get_memes():
     if not memes:
         raise FileNotFoundError('./memes dir not found')
 
-    with open('memes/log_memes.txt', 'r') as f:
+    with open('./memes/log_memes.txt', 'r') as f:
         [last_meme] = deque(f, maxlen=1) or ['']
 
     while True:
         output = random.choice(memes)
         if output != last_meme:
-            with open('memes/log_memes.txt', 'w') as f:
+            with open('./memes/log_memes.txt', 'w') as f:
                 f.write(output)
             break
 
