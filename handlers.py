@@ -63,7 +63,7 @@ async def memes_mes(message: types.Message):
 @dp.message_handler(commands=['credits'])
 async def memes_mes(message: types.Message):
     db_main.update_counter(int(message.from_user.id))
-    await message.answer(mes_credits.mes_text)
+    await message.answer(mes_credits.mes_text, disable_web_page_preview=True)
 
 
 @dp.message_handler(commands=['subscribe', 'start'])
