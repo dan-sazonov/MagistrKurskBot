@@ -8,6 +8,7 @@ import aiogram
 import messages
 
 from filters import IsOwnerFilter, IsAdminFilter, MemberCanRestrictFilter
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 mes_songs = messages.Messages.Songs()
 mes_contacts = messages.Messages.Contacts()
@@ -22,7 +23,8 @@ if config.ENABLE_ECHO:
 # init
 TOKEN = config.API_TOKEN
 bot = aiogram.Bot(token=TOKEN, parse_mode="HTML")
-dp = aiogram.Dispatcher(bot)
+storage = MemoryStorage()
+dp = aiogram.Dispatcher(bot, storage=storage)
 
 # activate filters
 dp.filters_factory.bind(IsOwnerFilter)

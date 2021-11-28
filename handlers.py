@@ -5,11 +5,10 @@
 """
 
 import config
-import dispatcher
 import features
 import db
 
-from dispatcher import dp, bot
+from dispatcher import dp, bot, storage
 from messages import Messages
 from aiogram import types
 
@@ -28,6 +27,8 @@ async def start_message(_):
 
 
 async def stop_message(_):
+    await bot.close()
+    await storage.close()
     await bot.send_message(chat_id=config.ADMIN_CHAT, text=messages.stop_polling)
 
 
