@@ -33,14 +33,24 @@ async def stop_message(_):
 
 @dp.message_handler(commands=['songs'])
 async def songs_mes(message: types.Message):
+    # создаем клаву
+    songs_kb = types.InlineKeyboardMarkup()
+    for key in mes_songs.mes_kb:
+        songs_kb.add(types.InlineKeyboardButton(key[0], url=key[1]))
+
     db_main.update_counter(int(message.from_user.id))
-    await message.answer(mes_songs.mes_text, reply_markup=dispatcher.songs_kb)
+    await message.answer(mes_songs.mes_text, reply_markup=songs_kb)
 
 
 @dp.message_handler(commands=['contacts'])
 async def contacts_mes(message: types.Message):
+    # создаем клаву
+    contacts_kb = types.InlineKeyboardMarkup()
+    for key in mes_contacts.mes_kb:
+        contacts_kb.add(types.InlineKeyboardButton(key[0], url=key[1]))
+
     db_main.update_counter(int(message.from_user.id))
-    await message.answer(mes_contacts.mes_text, reply_markup=dispatcher.contacts_kb)
+    await message.answer(mes_contacts.mes_text, reply_markup=contacts_kb)
 
 
 @dp.message_handler(commands=['howto'])

@@ -43,26 +43,18 @@ class Messages:
             self.mes_text = '''Песенник - это особый сборник песен, где можно найти самые главные песни, важные для каждого магистровца.
 
 Обычно песенники выдают на память всем участникам смен, но если вы хотите найти любимые песни ещё быстрее, то:'''
-            self.web_text = '📌 переходите на сайт'
-            self.web_link = 'http://magistrarium.ru/песенник'
-            self.app_text = '📥 скачивайте приложение "Песенник"'
-            self.app_link = 'https://trashbox.ru/topics/148839/pesennik-1.1'
+            self.mes_kb = (('📌 переходите на сайт', 'http://magistrarium.ru/песенник'),
+                           ('📥 скачивайте приложение "Песенник"', 'https://trashbox.ru/topics/148839/pesennik-1.1'))
 
     class Contacts:
         def __init__(self):
             self.mes_text = 'Подписывайся на все официальные аккаунты нашего центра! Так ты сможешь полностью погрузиться в магистровскую атмосферу и узнавать любые новости из первых рук!'
-            self.vk_text = '🔔 Группа ВКонтакте'
-            self.vk_link = 'https://vk.com/kromomagistr'
-            self.inst_text = '📸 Аккаунт в Instagram'
-            self.inst_link = 'https://instagram.com/magistrkursk'
-            self.web_text = '📌 Наш сайт'
-            self.web_link = 'http://magistrarium.ru/'
-            self.tt_text = '🎵 Аккаунт в TikTok'
-            self.tt_link = 'https://vm.tiktok.com/ZSe6pAoSQ/'
-            self.yt_text = '📺 Магистр ТВ - YouTube'
-            self.yt_link = 'https://youtube.com/c/%D0%9C%D0%B0%D0%B3%D0%B8%D1%81%..'
-            self.tg_text = '🔔 Канал в Telegram'
-            self.tg_link = 'https://t.me/magistrKursk'
+            self.mes_kb = (('🔔 Группа ВКонтакте', 'https://vk.com/kromomagistr'),
+                           ('📸 Аккаунт в Instagram', 'https://instagram.com/magistrkursk'),
+                           ('📌 Наш сайт', 'http://magistrarium.ru/'),
+                           ('🎵 Аккаунт в TikTok', 'https://vm.tiktok.com/ZSe6pAoSQ/'), ('📺 Магистр ТВ - YouTube',
+                                                                                         'https://www.youtube.com/c/%25D0%259C%25D0%25B0%25D0%25B3%25D0%25B8%25D1%2581%25D1%2582%25D1%2580%25D0%25A2%25D0%2592'),
+                           ('🔔 Канал в Telegram', 'https://t.me/magistrKursk'))
 
     class HowTo:
         def __init__(self):

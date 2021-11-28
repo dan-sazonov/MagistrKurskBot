@@ -28,18 +28,3 @@ dp = aiogram.Dispatcher(bot)
 dp.filters_factory.bind(IsOwnerFilter)
 dp.filters_factory.bind(IsAdminFilter)
 dp.filters_factory.bind(MemberCanRestrictFilter)
-
-# создаем клавы с кнопками
-# для /songs:
-songs_kb = aiogram.types.InlineKeyboardMarkup()
-songs_kb.add(aiogram.types.InlineKeyboardButton(mes_songs.web_text, url=mes_songs.web_link))
-songs_kb.add(aiogram.types.InlineKeyboardButton(mes_songs.app_text, url=mes_songs.app_link))
-# для /contacts
-contacts_kb = aiogram.types.InlineKeyboardMarkup()
-contacts_kb.add(aiogram.types.InlineKeyboardButton(mes_contacts.vk_text, url=mes_contacts.vk_link))
-contacts_kb.add(aiogram.types.InlineKeyboardButton(mes_contacts.inst_text, url=mes_contacts.inst_link))
-contacts_kb.add(aiogram.types.InlineKeyboardButton(mes_contacts.web_text, url=mes_contacts.web_link))
-contacts_kb.add(aiogram.types.InlineKeyboardButton(mes_contacts.tt_text, url=mes_contacts.tt_link))
-contacts_kb.add(aiogram.types.InlineKeyboardButton(mes_contacts.yt_text, url=mes_contacts.yt_link))
-contacts_kb.add(aiogram.types.InlineKeyboardButton(mes_contacts.tg_text, url=mes_contacts.tg_link))
-
