@@ -19,6 +19,7 @@ mes_contacts = Messages.Contacts()
 mes_howto = Messages.HowTo()
 mes_team = Messages.Team()
 mes_credits = Messages.Credits()
+mes_santa = Messages.Santa()
 db_main = db.Main()
 
 
@@ -66,6 +67,13 @@ async def memes_mes(message: types.Message):
     await message.answer(mes_credits.mes_text, disable_web_page_preview=True)
 
 
+@dp.message_handler(commands=['santa'])
+async def team_mes(message: types.Message):
+    db_main.update_counter(int(message.from_user.id))
+    data = {'wishes': '', 'address': '', 'on_meeting': False}
+    await message.answer(mes_santa.on_start_1)
+
+
 @dp.message_handler(commands=['subscribe', 'start'])
 async def start_mes(message: types.Message):
     db_main.add_user(int(message.from_user.id), message.from_user.username)
@@ -93,6 +101,7 @@ async def unknown_command_mes(message: types.Message):
     """
     Пересылаем все сообщения и айдишник юзеру, чисто для тестов
     Если эхо выключено, шлем сообщение, что команда не понятна
+
     :param message: Параметры сообщения, которое прилетело от юзера
     :return: None
     """
