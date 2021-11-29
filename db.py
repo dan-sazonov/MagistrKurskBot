@@ -88,6 +88,7 @@ class Santa:
         if not self.cursor.fetchone():
             self.cursor.execute("INSERT INTO santa(id, wishes, address, on_meeting) VALUES (%s, %s, %s, %s)",
                                 (user_id, *data.values()))
+        #     todo выдергивать по ключам
         self.db.commit()
 
     def del_user(self, user_id: int) -> None:

@@ -1,4 +1,4 @@
-from dispatcher import dp
+from dispatcher import dp, bot
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram import types
 from aiogram.dispatcher import FSMContext
@@ -34,14 +34,19 @@ async def answer_q1(message: types.Message, state: FSMContext):
     answer = message.text
     await state.update_data(wishes=answer)
 
-    await message.answer(mes_santa.ask_meeting)
+    mes_kb = types.ReplyKeyboardMarkup(row_width=2)
+    inline_btn_3 = types.KeyboardButton('Да!')
+    inline_btn_4 = types.KeyboardButton('Нет')
+    mes_kb.row(inline_btn_3, inline_btn_4)
+
+    await message.answer(mes_santa.ask_meeting, reply_markup=mes_kb)
     await Poll.OnMeeting.set()
 
 
 @dp.message_handler(state=Poll.OnMeeting)
 async def answer_q2(message: types.Message, state: FSMContext):
     answer = message.text
-    await state.update_data(answer2=answer)
+    await state.update_data(on_meeting=answer)
 
     await message.answer(mes_santa.ask_address)
     await Poll.next()
@@ -50,7 +55,7 @@ async def answer_q2(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Poll.Address)
 async def answer_q3(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    form = {'wishes': data.get("wishes"), 'on_meeting': False, 'address': message.text}
+    form = {'wishes': data.get("wishes"), 'on_meeting': data.get("on_meeting"), 'address': message.text}
 
     print(form)
 
