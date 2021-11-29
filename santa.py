@@ -21,6 +21,7 @@ class Poll(StatesGroup):
     Wishes = State()
     OnMeeting = State()
     Address = State()
+    Name = State()
 
 
 @dp.message_handler(Command("santa"), state=None)
@@ -55,19 +56,28 @@ async def answer_q2(message: types.Message, state: FSMContext):
     await state.update_data(on_meeting=answer)
 
     await message.answer(mes_santa.ask_address, reply_markup=types.ReplyKeyboardRemove())
-    await Poll.next()
+    await Poll.Address.set()
 
 
 @dp.message_handler(state=Poll.Address)
 async def answer_q3(message: types.Message, state: FSMContext):
-    data = await state.get_data()
-    form = {'wishes': data.get("wishes"), 'on_meeting': data.get("on_meeting"), 'address': message.text}
+    answer = message.text
+    await state.update_data(address=answer)
 
-    db.add_user(int(message.from_user.id), form)
+    await message.answer(mes_santa.ask_name)
+    await Poll.Name.set()
+
+
+@dp.message_handler(state=Poll.Name)
+async def answer_q3(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    form = {'wishes': data.get("wishes"), 'on_meeting': data.get("on_meeting"), 'address': data.get("address"), 'name': message.text}
+
+    db.add_user(int(69), form)
+    # print(form)
 
     await message.answer(mes_santa.on_end)
     await state.finish()
-
 
 @dp.message_handler(commands=['end'])
 async def team_mes(message: types.Message):
