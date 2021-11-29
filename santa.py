@@ -4,6 +4,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
 from messages import Messages
+from db import Santa
 
 
 def init():
@@ -13,6 +14,7 @@ def init():
 
 messages = Messages()
 mes_santa = Messages.Santa()
+db = Santa()
 
 
 class Poll(StatesGroup):
@@ -61,7 +63,7 @@ async def answer_q3(message: types.Message, state: FSMContext):
     data = await state.get_data()
     form = {'wishes': data.get("wishes"), 'on_meeting': data.get("on_meeting"), 'address': message.text}
 
-    print(form)
+    db.add_user(int(message.from_user.id), form)
 
     await message.answer(mes_santa.on_end)
     await state.finish()

@@ -73,7 +73,7 @@ class Santa:
         self.db, self.cursor = db, cursor
 
         cursor.execute("CREATE TABLE IF NOT EXISTS santa(id INTEGER PRIMARY KEY, wishes TEXT, address TEXT, "
-                       "on_meeting BOOLEAN)")
+                       "on_meeting BOOLEAN, gift_sent BOOLEAN, gift_received BOOLEAN)")
         db.commit()
 
     def add_user(self, user_id: int, data: dict[str:str]) -> None:
@@ -86,9 +86,9 @@ class Santa:
         """
         self.cursor.execute(f"SELECT id FROM santa WHERE id = {user_id}")
         if not self.cursor.fetchone():
-            self.cursor.execute("INSERT INTO santa(id, wishes, address, on_meeting) VALUES (%s, %s, %s, %s)",
-                                (user_id, *data.values()))
-        #     todo выдергивать по ключам
+            self.cursor.execute("INSERT INTO santa(id, wishes, address, on_meeting, gift_sent, gift_received) "
+                                "VALUES (%s, %s, %s, %s, FALSE, FALSE)", (user_id, data['wishes'], data['address'],
+                                                                          data['on_meeting']))
         self.db.commit()
 
     def del_user(self, user_id: int) -> None:
