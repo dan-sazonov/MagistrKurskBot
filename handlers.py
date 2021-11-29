@@ -25,11 +25,12 @@ db_main = db.Main()
 santa.init()  # костыль, не трогать
 
 
-async def start_message(_):
+async def on_startup(_):
+    await config.set_commands(dp)
     await bot.send_message(chat_id=config.ADMIN_CHAT, text=messages.start_polling)
 
 
-async def stop_message(_):
+async def on_shutdown(_):
     await bot.close()
     await storage.close()
     await bot.send_message(chat_id=config.ADMIN_CHAT, text=messages.stop_polling)
@@ -42,7 +43,6 @@ async def songs_mes(message: types.Message):
     for key in mes_songs.mes_kb:
         songs_kb.add(types.InlineKeyboardButton(key[0], url=key[1]))
 
-
     await message.answer(mes_songs.mes_text, reply_markup=songs_kb)
     db_main.update_counter(int(message.from_user.id), 'songs')
 
@@ -54,42 +54,36 @@ async def contacts_mes(message: types.Message):
     for key in mes_contacts.mes_kb:
         contacts_kb.add(types.InlineKeyboardButton(key[0], url=key[1]))
 
-
     await message.answer(mes_contacts.mes_text, reply_markup=contacts_kb)
     db_main.update_counter(int(message.from_user.id), 'contacts')
 
 
 @dp.message_handler(commands=['howto'])
 async def howto_mes(message: types.Message):
-
     await message.answer(mes_howto.mes_text)
     db_main.update_counter(int(message.from_user.id), 'howto')
 
 
 @dp.message_handler(commands=['team'])
 async def team_mes(message: types.Message):
-
     await message.answer(mes_team.mes_text)
     db_main.update_counter(int(message.from_user.id), 'team')
 
 
 @dp.message_handler(commands=['memes'])
 async def memes_mes(message: types.Message):
-
     await message.answer_photo(types.InputFile(features.get_memes()))
     db_main.update_counter(int(message.from_user.id), 'memes')
 
 
 @dp.message_handler(commands=['credits'])
 async def memes_mes(message: types.Message):
-
     await message.answer(mes_credits.mes_text, disable_web_page_preview=True)
     db_main.update_counter(int(message.from_user.id), 'credits')
 
 
 @dp.message_handler(commands=['subscribe', 'start'])
 async def start_mes(message: types.Message):
-
     await message.answer(messages.subscribe)
     await message.answer(messages.do_unsubscribe)
     db_main.add_user(int(message.from_user.id), message.from_user.username)
@@ -106,7 +100,6 @@ async def stop_mes(message: types.Message):
 
 @dp.message_handler(commands=['help', '!', '?'])
 async def help_mes(message: types.Message):
-
     await message.answer(messages.help)
     db_main.update_counter(int(message.from_user.id), 'help')
 
