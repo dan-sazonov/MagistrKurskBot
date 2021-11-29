@@ -13,7 +13,7 @@ class Main:
     """
 
     def __init__(self):
-        db = psycopg2.connect(config.DB_URI, sslmode='require')
+        db = psycopg2.connect(config.DATABASE_URL, sslmode='require')
         cursor = db.cursor()
         self.db, self.cursor = db, cursor
 
@@ -68,7 +68,7 @@ class Santa:
     # Да, я слышал про DRY. Интересно, почему код должен быть сухим?
 
     def __init__(self):
-        db = psycopg2.connect(config.DB_URI, sslmode='require')
+        db = psycopg2.connect(config.DATABASE_URL, sslmode='require')
         cursor = db.cursor()
         self.db, self.cursor = db, cursor
 
