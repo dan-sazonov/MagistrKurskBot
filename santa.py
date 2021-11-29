@@ -31,13 +31,13 @@ async def start_polling(message: types.Message):
 
 @dp.message_handler(state=Poll.Wishes)
 async def answer_q1(message: types.Message, state: FSMContext):
+    mes_kb = types.ReplyKeyboardMarkup(row_width=2)
+    btn_1 = types.KeyboardButton('Да!')
+    btn_2 = types.KeyboardButton('Нет')
+    mes_kb.row(btn_1, btn_2)
+
     answer = message.text
     await state.update_data(wishes=answer)
-
-    mes_kb = types.ReplyKeyboardMarkup(row_width=2)
-    inline_btn_3 = types.KeyboardButton('Да!')
-    inline_btn_4 = types.KeyboardButton('Нет')
-    mes_kb.row(inline_btn_3, inline_btn_4)
 
     await message.answer(mes_santa.ask_meeting, reply_markup=mes_kb)
     await Poll.OnMeeting.set()
@@ -46,6 +46,10 @@ async def answer_q1(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Poll.OnMeeting)
 async def answer_q2(message: types.Message, state: FSMContext):
     answer = message.text
+    if answer not in ['Да!', 'Нет']:
+        await message.reply('Я тебя не понял. Пожалуйста, используй кнопки для ответа')
+        return
+    answer = {'Да!': True, 'Нет': False}[answer]
     await state.update_data(on_meeting=answer)
 
     await message.answer(mes_santa.ask_address)
