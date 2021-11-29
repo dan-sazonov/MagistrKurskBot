@@ -25,7 +25,7 @@ class Poll(StatesGroup):
 
 @dp.message_handler(Command("santa"), state=None)
 async def start_polling(message: types.Message):
-    await message.answer(mes_santa.on_start_1)
+    await message.answer(mes_santa.on_start)
     await message.answer(mes_santa.ask_wishes)
 
     await Poll.Wishes.set()
@@ -67,3 +67,9 @@ async def answer_q3(message: types.Message, state: FSMContext):
 
     await message.answer(mes_santa.on_end)
     await state.finish()
+
+
+@dp.message_handler(commands=['end'])
+async def team_mes(message: types.Message):
+    db.del_user(int(message.from_user.id))
+    await message.answer(mes_santa.end)
