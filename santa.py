@@ -31,7 +31,7 @@ async def start_polling(message: types.Message):
 
 @dp.message_handler(state=Poll.Wishes)
 async def answer_q1(message: types.Message, state: FSMContext):
-    mes_kb = types.ReplyKeyboardMarkup(row_width=2)
+    mes_kb = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
     btn_1 = types.KeyboardButton('Да!')
     btn_2 = types.KeyboardButton('Нет')
     mes_kb.row(btn_1, btn_2)
@@ -52,7 +52,7 @@ async def answer_q2(message: types.Message, state: FSMContext):
     answer = {'Да!': True, 'Нет': False}[answer]
     await state.update_data(on_meeting=answer)
 
-    await message.answer(mes_santa.ask_address)
+    await message.answer(mes_santa.ask_address, reply_markup=types.ReplyKeyboardRemove())
     await Poll.next()
 
 
