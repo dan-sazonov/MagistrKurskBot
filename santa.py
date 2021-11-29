@@ -4,7 +4,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
 from messages import Messages
-from db import Santa
+from db import Santa, Main
 
 
 def init():
@@ -15,6 +15,7 @@ def init():
 messages = Messages()
 mes_santa = Messages.Santa()
 db = Santa()
+db_main = Main()
 
 
 class Poll(StatesGroup):
@@ -24,10 +25,11 @@ class Poll(StatesGroup):
     Name = State()
 
 
-@dp.message_handler(Command("santa"), state=None)
+@dp.message_handler(commands=['santa'], state=None)
 async def start_polling(message: types.Message):
     await message.answer(mes_santa.on_start, disable_web_page_preview=True)
     await message.answer(mes_santa.ask_wishes)
+    db_main.update_counter(message.from_user.id, 'santa')
 
     await Poll.Wishes.set()
 
@@ -83,4 +85,5 @@ async def answer_q3(message: types.Message, state: FSMContext):
 @dp.message_handler(commands=['end'])
 async def team_mes(message: types.Message):
     db.del_user(int(message.from_user.id))
+    db_main.update_counter(message.from_user.id, 'end')
     await message.answer(mes_santa.end)
