@@ -100,7 +100,7 @@ async def stop_mes(message: types.Message):
 
 @dp.message_handler(commands=['help', '!', '?'])
 async def help_mes(message: types.Message):
-    await message.answer(messages.help)
+    await message.answer(messages.help, disable_web_page_preview=True)
     db_main.update_counter(int(message.from_user.id), 'help')
 
 

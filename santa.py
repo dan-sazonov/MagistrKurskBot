@@ -26,7 +26,7 @@ class Poll(StatesGroup):
 
 @dp.message_handler(Command("santa"), state=None)
 async def start_polling(message: types.Message):
-    await message.answer(mes_santa.on_start)
+    await message.answer(mes_santa.on_start, disable_web_page_preview=True)
     await message.answer(mes_santa.ask_wishes)
 
     await Poll.Wishes.set()
