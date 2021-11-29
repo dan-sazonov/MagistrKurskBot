@@ -71,13 +71,14 @@ async def answer_q3(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Poll.Name)
 async def answer_q3(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    form = {'wishes': data.get("wishes"), 'on_meeting': data.get("on_meeting"), 'address': data.get("address"), 'name': message.text}
+    form = {'wishes': data.get("wishes"), 'on_meeting': data.get("on_meeting"), 'address': data.get("address"),
+            'name': message.text}
 
-    db.add_user(int(69), form)
-    # print(form)
+    db.add_user(int(message.from_user.id), form)
 
     await message.answer(mes_santa.on_end)
     await state.finish()
+
 
 @dp.message_handler(commands=['end'])
 async def team_mes(message: types.Message):
