@@ -1,5 +1,5 @@
 # MagistrKurskBot
-[![GitHub](https://img.shields.io/github/license/dan-sazonov/MagistrKurskBot)](https://github.com/dan-sazonov/MagistrKurskBot/blob/master/LICENSE.md)&nbsp;&nbsp;
+[![GitHub](https://img.shields.io/github/license/dan-sazonov/MagistrKurskBot)](https://github.com/dan-sazonov/MagistrKurskBot/blob/master/legal_info/LICENSE.md)&nbsp;&nbsp;
 ![OpenSource](https://img.shields.io/badge/Open%20Source-%E2%99%A5-red)<br>
 
 **Чат-бот для телеграм-канала [КРОМО "Магистр"](https://t.me/magistrKursk).**
