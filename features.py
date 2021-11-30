@@ -10,6 +10,7 @@ from collections import deque
 def get_memes():
     """
     Возвращает рандомный мемас из заранее отобранных
+
     :return: путь к пикче
     """
     memes = []
