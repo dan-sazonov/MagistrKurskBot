@@ -24,10 +24,10 @@ if not DATABASE_URL:
 async def set_commands(dp):
     await dp.bot.set_my_commands([
         types.BotCommand('songs', 'Песенник'),
-        types.BotCommand('contacts', 'Контакты КРОМО "Магистр"'),
         types.BotCommand('howto', 'Как попасть на смену'),
         types.BotCommand('team', 'Педсостав центра'),
         types.BotCommand('memes', 'Получить мем'),
+        types.BotCommand('contacts', 'Контакты КРОМО "Магистр"'),
         types.BotCommand('credits', 'Наша команда'),
         types.BotCommand('santa', 'Тайный Санта - регистрация'),
         types.BotCommand('help', 'Краткая справка')
