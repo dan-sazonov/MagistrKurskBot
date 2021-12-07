@@ -125,16 +125,16 @@ class Santa:
 
         self.db.commit()
 
-    def get_players(self) -> list[int]:
+    def get_players(self) -> list[tuple[int, bool]]:
         """
-        Возвращает список с айдишниками всех участников
+        Возвращает список с айдишниками и флагами участия всех участников
 
-        :return: типа так не понятно?
+        :return: [(id, on_meeting), ]
         """
         players = []
-        self.cursor.execute(f"SELECT id FROM santa")
+        self.cursor.execute(f"SELECT id, on_meeting FROM santa")
         for player in self.cursor.fetchall():
-            players.append(player[0])
+            players.append(player)
         return players
 
 
