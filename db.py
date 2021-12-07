@@ -138,5 +138,32 @@ class Santa:
         return players
 
 
-f = Santa()
-f.get_players()
+class Drawing:
+    """
+    БД с инфой по жеребьевке
+    """
+
+    def __init__(self):
+        db = psycopg2.connect(config.DATABASE_URL, sslmode='require')
+        cursor = db.cursor()
+        self.db, self.cursor = db, cursor
+
+        cursor.execute("CREATE TABLE IF NOT EXISTS drawing(master INTEGER PRIMARY KEY, slave INTEGER, "
+                       "on_meeting BOOLEAN, gift_sent BOOLEAN, gift_received BOOLEAN)")
+
+        db.commit()
+
+    def add_pair(self, data: tuple[int, int, bool]) -> None:
+        """
+        Добавляет в бд пару участников. master - санта, slave - подопечный, on_meeting - будут ли m/s на встрече
+
+        :param data: (master, slave, on_meeting)
+        :return: None
+        """
+
+        self.cursor.execute(f"SELECT master FROM drawing WHERE master = {data[0]}")
+        if not self.cursor.fetchone():
+            self.cursor.execute("INSERT INTO drawing(master, slave, on_meeting, gift_sent, gift_received) "
+                                "VALUES (%s,%s,%s, FALSE, FALSE)", data)
+
+        self.db.commit()
