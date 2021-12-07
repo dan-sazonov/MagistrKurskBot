@@ -48,3 +48,12 @@ def add_pairs(pairs: list[tuple[int, int, bool]]) -> None:
         db_drawing.add_pair(pair)
         counter += 1
     print(f'INFO: {counter} pairs were added to the database')
+
+
+def sent_alerts(pairs: list[tuple[int, int, bool]]) -> None:
+    pass
+
+
+if __name__ == "__main__":
+    pairs_of_players = get_pairs()
+    add_pairs(pairs_of_players)
