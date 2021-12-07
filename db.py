@@ -124,3 +124,19 @@ class Santa:
             self.cursor.execute(f"DELETE FROM santa WHERE id = {user_id}")
 
         self.db.commit()
+
+    def get_players(self) -> list[int]:
+        """
+        Возвращает список с айдишниками всех участников
+
+        :return: типа так не понятно?
+        """
+        players = []
+        self.cursor.execute(f"SELECT id FROM santa")
+        for player in self.cursor.fetchall():
+            players.append(player[0])
+        return players
+
+
+f = Santa()
+f.get_players()
