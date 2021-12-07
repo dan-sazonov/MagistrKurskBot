@@ -32,3 +32,19 @@ def get_pairs() -> list[tuple[int, int, bool]]:
         on_meeting_flag = True
 
     return pairs
+
+
+def add_pairs(pairs: list[tuple[int, int, bool]]) -> None:
+    """
+    Добавляет в бд drawing пары участников
+
+    :param pairs: [(master, slave, on_meeting),]
+    :return: None
+    """
+
+    counter = 0
+
+    for pair in pairs:
+        db_drawing.add_pair(pair)
+        counter += 1
+    print(f'INFO: {counter} pairs were added to the database')
