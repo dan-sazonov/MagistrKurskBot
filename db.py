@@ -167,3 +167,22 @@ class Drawing:
                                 "VALUES (%s,%s,%s, FALSE, FALSE)", data)
 
         self.db.commit()
+
+    def update_sent_cnt(self, user_id):
+        self.cursor.execute(f"SELECT master FROM drawing WHERE master = {user_id}")
+        if not self.cursor.fetchone():
+            print(f'ERR: user {user_id} not found in the database')
+            return None
+
+        self.cursor.execute(f"UPDATE drawing SET gift_sent = TRUE WHERE master = {user_id}")
+        self.db.commit()
+
+    def update_received_cnt(self, user_id):
+        self.cursor.execute(f"SELECT master FROM drawing WHERE master = {user_id}")
+        if not self.cursor.fetchone():
+            print(f'ERR: user {user_id} not found in the database')
+            return None
+
+        self.cursor.execute(f"UPDATE drawing SET gift_received = TRUE WHERE master = {user_id}")
+        self.db.commit()
+

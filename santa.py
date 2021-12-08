@@ -4,7 +4,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
 from messages import Messages
-from db import Santa, Main
+from db import Santa, Main, Drawing
 
 
 def init():
@@ -16,6 +16,7 @@ messages = Messages()
 mes_santa = Messages.Santa()
 db = Santa()
 db_main = Main()
+db_drawing = Drawing()
 
 
 class Poll(StatesGroup):
@@ -90,18 +91,22 @@ async def team_mes(message: types.Message):
 
 
 inline_btn_1 = types.InlineKeyboardButton('Я отправил!', callback_data='sent_btn')
-inline_btn_2 = types.InlineKeyboardButton('Я получил!', callback_data='received_btn')
+inline_btn_2 = types.InlineKeyboardButton('Ура!', callback_data='received_btn')
 sent_btn = types.InlineKeyboardMarkup().add(inline_btn_1)
 received_btn = types.InlineKeyboardMarkup().add(inline_btn_2)
 
 
 @dp.callback_query_handler(lambda c: c.data == 'sent_btn')
 async def process_callback_button1(callback_query: types.CallbackQuery):
+    uid = callback_query.from_user.id
     await bot.answer_callback_query(callback_query.id)
-    await bot.send_message(callback_query.from_user.id, 'Отправка подарка подтверждена!')
+    db_drawing.update_sent_cnt(uid)
+    await bot.send_message(uid, 'Отправка подарка подтверждена!')
 
 
 @dp.callback_query_handler(lambda c: c.data == 'received_btn')
 async def process_callback_button1(callback_query: types.CallbackQuery):
+    uid = callback_query.from_user.id
     await bot.answer_callback_query(callback_query.id)
-    await bot.send_message(callback_query.from_user.id, 'Отправка подарка подтверждена!')
+    db_drawing.update_received_cnt(uid)
+    await bot.send_message(uid, 'Получениие подарка подтверждено!')
