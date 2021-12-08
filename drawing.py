@@ -4,8 +4,8 @@
 автоматизировать ручную работу, переписывать его я смысла не вижу
 """
 
-
 import random
+import asyncio
 
 from db import Santa, Drawing
 from dispatcher import dp, bot, storage
@@ -64,21 +64,29 @@ def add_pairs(pairs: list[tuple[int, int, bool]]) -> None:
 
 
 def get_mes_text(slave_id, on_meeting):
-    return 'тестовое сообщение мастеру'
+    return f'тестовое сообщение мастеру. ты даришь подарок {slave_id}. он будет на встрече: {on_meeting}'
 
 
-test_pairs = [(69, 420, 1), (420, 69, 1)]
+async def sent_alerts(pairs: list[tuple[int, int, bool]]) -> None:
+    """
+    Рассылает юзерам сообщение с инфой про их слэйва
 
-
-def sent_alerts(pairs: list[tuple[int, int, bool]]) -> None:
-    if input('ты ебанулся? ') != 'yes':
-        pairs = test_pairs
-
-    async def mailing(message: types.Message):
-        for pair in pairs:
-            await bot.send_message(chat_id=pair[0], text=get_mes_text(pair[1], pair[2]))
+    :param pairs: [(санта, подопечный, on_meeting), ]
+    :return: None
+    """
+    for pair in pairs:
+        await bot.send_message(chat_id=pair[0], text=get_mes_text(pair[1], pair[2]))
+        await bot.close()  # жуткий костыль, но без него все сыпется. А так только варнинг летит
+        await asyncio.sleep(1)
 
 
 if __name__ == "__main__":
-    pairs_of_players = get_pairs()
+    pairs_of_players = [(5079890730, 385056286, True), (385056286, 5079890730, True)]
+    # pairs_of_players = get_pairs()
+    print(0)
     add_pairs(pairs_of_players)
+    print(1)
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(sent_alerts(pairs_of_players))
+    loop.close()
