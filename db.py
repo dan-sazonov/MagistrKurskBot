@@ -160,7 +160,6 @@ class Drawing:
         :param data: (master, slave, on_meeting)
         :return: None
         """
-
         self.cursor.execute(f"SELECT master FROM drawing WHERE master = {data[0]}")
         if not self.cursor.fetchone():
             self.cursor.execute("INSERT INTO drawing(master, slave, on_meeting, gift_sent, gift_received) "
@@ -168,7 +167,13 @@ class Drawing:
 
         self.db.commit()
 
-    def update_sent_cnt(self, user_id):
+    def change_sent_st(self, user_id: int) -> None:
+        """
+        Ставит флаг gift_sent выбранного юзера в true
+
+        :param user_id: id юзера
+        :return: None
+        """
         self.cursor.execute(f"SELECT master FROM drawing WHERE master = {user_id}")
         if not self.cursor.fetchone():
             print(f'ERR: user {user_id} not found in the database')
@@ -177,7 +182,13 @@ class Drawing:
         self.cursor.execute(f"UPDATE drawing SET gift_sent = TRUE WHERE master = {user_id}")
         self.db.commit()
 
-    def update_received_cnt(self, user_id):
+    def change_received_st(self, user_id: int) -> None:
+        """
+        Ставит флаг gift_received выбранного юзера в true
+
+        :param user_id: id юзера
+        :return: None
+        """
         self.cursor.execute(f"SELECT master FROM drawing WHERE master = {user_id}")
         if not self.cursor.fetchone():
             print(f'ERR: user {user_id} not found in the database')

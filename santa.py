@@ -100,7 +100,7 @@ received_btn = types.InlineKeyboardMarkup().add(inline_btn_2)
 async def process_callback_button1(callback_query: types.CallbackQuery):
     uid = callback_query.from_user.id
     await bot.answer_callback_query(callback_query.id)
-    db_drawing.update_sent_cnt(uid)
+    db_drawing.change_sent_st(uid)
     await bot.send_message(uid, 'Отправка подарка подтверждена!')
 
 
@@ -108,5 +108,5 @@ async def process_callback_button1(callback_query: types.CallbackQuery):
 async def process_callback_button1(callback_query: types.CallbackQuery):
     uid = callback_query.from_user.id
     await bot.answer_callback_query(callback_query.id)
-    db_drawing.update_received_cnt(uid)
+    db_drawing.change_received_st(uid)
     await bot.send_message(uid, 'Получениие подарка подтверждено!')

@@ -24,7 +24,6 @@ def get_pairs() -> list[tuple[int, int, bool]]:
 
     :return: [(санта, подопечный, on_meeting), ]
     """
-
     players_on_meeting, players_out_meeting = [], []
     pairs = []
     on_meeting_flag = False
@@ -55,7 +54,6 @@ def add_pairs(pairs: list[tuple[int, int, bool]]) -> None:
     :param pairs: [(master, slave, on_meeting),]
     :return: None
     """
-
     counter = 0
 
     for pair in pairs:
