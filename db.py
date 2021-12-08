@@ -197,3 +197,32 @@ class Drawing:
         self.cursor.execute(f"UPDATE drawing SET gift_received = TRUE WHERE master = {user_id}")
         self.db.commit()
 
+    def get_slave(self, master_id: int) -> int:
+        """
+        Возвращает телеграм-айдишник слэйва по айдишнику мастера
+
+        :param master_id: айдишник мастера
+        :return: айдишник слэйва
+        """
+        self.cursor.execute(f"SELECT master FROM drawing WHERE master = {master_id}")
+        if not self.cursor.fetchone():
+            print(f'ERR: user {master_id} not found in the database')
+            return config.ADMIN_CHAT
+
+        self.cursor.execute(f"SELECT slave FROM drawing WHERE master = {master_id}")
+        return self.cursor.fetchone()[0]
+
+    def get_master(self, slave_id: int) -> int:
+        """
+        Возвращает телеграм-айдишник мастера по айдишнику слэйва
+
+        :param slave_id: айдишник слэйва
+        :return: айдишник мастера
+        """
+        self.cursor.execute(f"SELECT master FROM drawing WHERE slave = {slave_id}")
+        if not self.cursor.fetchone():
+            print(f'ERR: user {slave_id} not found in the database')
+            return config.ADMIN_CHAT
+
+        self.cursor.execute(f"SELECT master FROM drawing WHERE slave = {slave_id}")
+        return self.cursor.fetchone()[0]

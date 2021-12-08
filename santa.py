@@ -102,6 +102,7 @@ async def process_callback_button1(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
     db_drawing.change_sent_st(uid)
     await bot.send_message(uid, 'Отправка подарка подтверждена!')
+    await bot.send_message(db_drawing.get_slave(uid), 'тебе подарок отправили', reply_markup=received_btn)
 
 
 @dp.callback_query_handler(lambda c: c.data == 'received_btn')
@@ -109,4 +110,5 @@ async def process_callback_button1(callback_query: types.CallbackQuery):
     uid = callback_query.from_user.id
     await bot.answer_callback_query(callback_query.id)
     db_drawing.change_received_st(uid)
-    await bot.send_message(uid, 'Получениие подарка подтверждено!')
+    await bot.send_message(uid, 'Получение подарка подтверждено!')
+    await bot.send_message(db_drawing.get_master(uid), 'твой подарок получили')
