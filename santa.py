@@ -87,3 +87,21 @@ async def team_mes(message: types.Message):
     db.del_user(int(message.from_user.id))
     db_main.update_counter(message.from_user.id, 'end')
     await message.answer(mes_santa.end)
+
+
+inline_btn_1 = types.InlineKeyboardButton('Я отправил!', callback_data='sent_btn')
+inline_btn_2 = types.InlineKeyboardButton('Я получил!', callback_data='received_btn')
+sent_btn = types.InlineKeyboardMarkup().add(inline_btn_1)
+received_btn = types.InlineKeyboardMarkup().add(inline_btn_2)
+
+
+@dp.callback_query_handler(lambda c: c.data == 'sent_btn')
+async def process_callback_button1(callback_query: types.CallbackQuery):
+    await bot.answer_callback_query(callback_query.id)
+    await bot.send_message(callback_query.from_user.id, 'Отправка подарка подтверждена!')
+
+
+@dp.callback_query_handler(lambda c: c.data == 'received_btn')
+async def process_callback_button1(callback_query: types.CallbackQuery):
+    await bot.answer_callback_query(callback_query.id)
+    await bot.send_message(callback_query.from_user.id, 'Отправка подарка подтверждена!')

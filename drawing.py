@@ -6,6 +6,7 @@
 
 import random
 import asyncio
+import santa
 
 from db import Santa, Drawing
 from dispatcher import dp, bot, storage
@@ -67,6 +68,14 @@ def get_mes_text(slave_id, on_meeting):
     return f'тестовое сообщение мастеру. ты даришь подарок {slave_id}. он будет на встрече: {on_meeting}'
 
 
+def gift_sent():
+    pass
+
+
+def gift_received():
+    pass
+
+
 async def sent_alerts(pairs: list[tuple[int, int, bool]]) -> None:
     """
     Рассылает юзерам сообщение с инфой про их слэйва
@@ -75,7 +84,7 @@ async def sent_alerts(pairs: list[tuple[int, int, bool]]) -> None:
     :return: None
     """
     for pair in pairs:
-        await bot.send_message(chat_id=pair[0], text=get_mes_text(pair[1], pair[2]))
+        await bot.send_message(chat_id=pair[0], text=get_mes_text(pair[1], pair[2]), reply_markup=santa.sent_btn)
         await bot.close()  # жуткий костыль, но без него все сыпется. А так только варнинг летит
         await asyncio.sleep(1)
 
