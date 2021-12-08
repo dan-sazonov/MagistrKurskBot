@@ -80,7 +80,7 @@ def get_mes_text(slave_id: int, on_meeting: bool) -> str:
 <b>Почтовый адрес:</b> <i>{data[1]}</i>
 <b>Приедет ли на общелагерную встречу:</b> нет. Свой подарок ты можешь отправить по почте.
 
-<b>Пожелания по подарку: <i>"{data[2]}"</i>
+<b>Пожелания по подарку:</b> <i>"{data[2]}"</i>
 
 <i>После того, как ты отправишь подарок, нажми кнопку "Я отправил!" под этим сообщением.</i>'''
     txt_on = f'''<b>Привет, дорогой друг!</b> Мы произвели жеребьёвку участников игры "Тайный Санта "Магистра". Теперь мы знаем, кто и кому будет делать подарок. Спешим рассказать и тебе!
@@ -109,12 +109,12 @@ async def sent_alerts(pairs: list[tuple[int, int, bool]]) -> None:
     for pair in pairs:
         await bot.send_message(chat_id=pair[0], text=get_mes_text(pair[1], pair[2]), reply_markup=santa.sent_btn)
         await bot.close()  # жуткий костыль, но без него все сыпется. А так только варнинг летит
-        await asyncio.sleep(1)
+        await asyncio.sleep(30)
 
 
 if __name__ == "__main__":
-    pairs_of_players = [(5079890730, 385056286, True), (385056286, 5079890730, True)]
-    # pairs_of_players = get_pairs()
+    # pairs_of_players = [(5079890730, 385056286, True), (385056286, 5079890730, True)]
+    pairs_of_players = get_pairs()
     print(0)
     add_pairs(pairs_of_players)
     print(1)
