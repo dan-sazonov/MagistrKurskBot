@@ -91,7 +91,7 @@ async def team_mes(message: types.Message):
 
 
 inline_btn_1 = types.InlineKeyboardButton('Я отправил!', callback_data='sent_btn')
-inline_btn_2 = types.InlineKeyboardButton('Ура!', callback_data='received_btn')
+inline_btn_2 = types.InlineKeyboardButton('Я получил!', callback_data='received_btn')
 sent_btn = types.InlineKeyboardMarkup().add(inline_btn_1)
 received_btn = types.InlineKeyboardMarkup().add(inline_btn_2)
 
@@ -101,8 +101,12 @@ async def process_callback_button1(callback_query: types.CallbackQuery):
     uid = callback_query.from_user.id
     await bot.answer_callback_query(callback_query.id)
     db_drawing.change_sent_st(uid)
-    await bot.send_message(uid, 'Отправка подарка подтверждена!')
-    await bot.send_message(db_drawing.get_slave(uid), 'тебе подарок отправили', reply_markup=received_btn)
+    await bot.send_message(uid, '🔔 Отправка подарка подтверждена!')
+    await bot.send_message(db_drawing.get_slave(uid), '''📬<b> Вам посылка!</b>
+
+Именно это ты скоро услышишь от почтальона, ведь твой Тайный Санта уже отправил подарок!
+
+Нажми кнопку "Я получил!", когда получишь подарок ''', reply_markup=received_btn)
 
 
 @dp.callback_query_handler(lambda c: c.data == 'received_btn')
@@ -110,5 +114,5 @@ async def process_callback_button1(callback_query: types.CallbackQuery):
     uid = callback_query.from_user.id
     await bot.answer_callback_query(callback_query.id)
     db_drawing.change_received_st(uid)
-    await bot.send_message(uid, 'Получение подарка подтверждено!')
-    await bot.send_message(db_drawing.get_master(uid), 'твой подарок получили')
+    await bot.send_message(uid, '🔔 Получение подарка подтверждено!')
+    await bot.send_message(db_drawing.get_master(uid), '🎁 Твой подопечный получил подарок!')
