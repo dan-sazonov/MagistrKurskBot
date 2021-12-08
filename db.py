@@ -148,7 +148,7 @@ class Drawing:
         cursor = db.cursor()
         self.db, self.cursor = db, cursor
 
-        cursor.execute("CREATE TABLE IF NOT EXISTS drawing(master INTEGER PRIMARY KEY, slave INTEGER, "
+        cursor.execute("CREATE TABLE IF NOT EXISTS drawing(master BIGINT PRIMARY KEY, slave BIGINT, "
                        "on_meeting BOOLEAN, gift_sent BOOLEAN, gift_received BOOLEAN)")
 
         db.commit()
