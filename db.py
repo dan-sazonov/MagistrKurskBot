@@ -144,17 +144,12 @@ class Santa:
         :param user_id: айдишник участника
         :return: (фио, адрес, пожелания)
         """
-        if user_id == 5079890730:
-            # todo выпили это
-            user_id = 726058532
-
         self.cursor.execute(f"SELECT id FROM santa WHERE id = {user_id}")
         if not self.cursor.fetchone():
             return 'Ошибка!', 'Ошибка!', 'Ошибка!'
 
         self.cursor.execute(f"SELECT name, address, wishes FROM santa WHERE id = {user_id}")
         return tuple(map(lambda x: x.replace('\n', ' '), self.cursor.fetchall()[0]))
-
 
 
 class Drawing:
