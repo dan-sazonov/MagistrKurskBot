@@ -29,6 +29,5 @@ async def set_commands(dp):
         types.BotCommand('memes', 'Получить мем'),
         types.BotCommand('contacts', 'Контакты КРОМО "Магистр"'),
         types.BotCommand('credits', 'Наша команда'),
-        types.BotCommand('santa', 'Тайный Санта - регистрация'),
         types.BotCommand('help', 'Краткая справка')
     ])
