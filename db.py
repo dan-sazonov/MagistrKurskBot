@@ -124,3 +124,124 @@ class Santa:
             self.cursor.execute(f"DELETE FROM santa WHERE id = {user_id}")
 
         self.db.commit()
+
+    def get_players(self) -> list[tuple[int, bool]]:
+        """
+        Возвращает список с айдишниками и флагами участия всех участников
+
+        :return: [(id, on_meeting), ]
+        """
+        players = []
+        self.cursor.execute(f"SELECT id, on_meeting FROM santa")
+        for player in self.cursor.fetchall():
+            players.append(player)
+        return players
+
+    def get_info(self, user_id: int) -> tuple:
+        """
+        Возвращает основную инфу про участника. Переносы строк меняются на пробелы
+
+        :param user_id: айдишник участника
+        :return: (фио, адрес, пожелания)
+        """
+        if user_id == 5079890730:
+            # todo выпили это
+            user_id = 726058532
+
+        self.cursor.execute(f"SELECT id FROM santa WHERE id = {user_id}")
+        if not self.cursor.fetchone():
+            return 'Ошибка!', 'Ошибка!', 'Ошибка!'
+
+        self.cursor.execute(f"SELECT name, address, wishes FROM santa WHERE id = {user_id}")
+        return tuple(map(lambda x: x.replace('\n', ' '), self.cursor.fetchall()[0]))
+
+
+
+class Drawing:
+    """
+    БД с инфой по жеребьевке
+    """
+
+    def __init__(self):
+        db = psycopg2.connect(config.DATABASE_URL, sslmode='require')
+        cursor = db.cursor()
+        self.db, self.cursor = db, cursor
+
+        cursor.execute("CREATE TABLE IF NOT EXISTS drawing(master BIGINT PRIMARY KEY, slave BIGINT, "
+                       "on_meeting BOOLEAN, gift_sent BOOLEAN, gift_received BOOLEAN)")
+
+        db.commit()
+
+    def add_pair(self, data: tuple[int, int, bool]) -> None:
+        """
+        Добавляет в бд пару участников. master - санта, slave - подопечный, on_meeting - будут ли m/s на встрече
+
+        :param data: (master, slave, on_meeting)
+        :return: None
+        """
+        self.cursor.execute(f"SELECT master FROM drawing WHERE master = {data[0]}")
+        if not self.cursor.fetchone():
+            self.cursor.execute("INSERT INTO drawing(master, slave, on_meeting, gift_sent, gift_received) "
+                                "VALUES (%s,%s,%s, FALSE, FALSE)", data)
+
+        self.db.commit()
+
+    def change_sent_st(self, user_id: int) -> None:
+        """
+        Ставит флаг gift_sent выбранного юзера в true
+
+        :param user_id: id юзера
+        :return: None
+        """
+        self.cursor.execute(f"SELECT master FROM drawing WHERE master = {user_id}")
+        if not self.cursor.fetchone():
+            print(f'ERR: user {user_id} not found in the database')
+            return None
+
+        self.cursor.execute(f"UPDATE drawing SET gift_sent = TRUE WHERE master = {user_id}")
+        self.db.commit()
+
+    def change_received_st(self, user_id: int) -> None:
+        """
+        Ставит флаг gift_received выбранного юзера в true
+
+        :param user_id: id юзера
+        :return: None
+        """
+        self.cursor.execute(f"SELECT master FROM drawing WHERE master = {user_id}")
+        if not self.cursor.fetchone():
+            print(f'ERR: user {user_id} not found in the database')
+            return None
+
+        self.cursor.execute(f"UPDATE drawing SET gift_received = TRUE WHERE master = {user_id}")
+        self.db.commit()
+
+    def get_slave(self, master_id: int) -> int:
+        """
+        Возвращает телеграм-айдишник слэйва по айдишнику мастера
+
+        :param master_id: айдишник мастера
+        :return: айдишник слэйва
+        """
+        self.cursor.execute(f"SELECT master FROM drawing WHERE master = {master_id}")
+        if not self.cursor.fetchone():
+            print(f'ERR: user {master_id} not found in the database')
+            return config.ADMIN_CHAT
+
+        self.cursor.execute(f"SELECT slave FROM drawing WHERE master = {master_id}")
+        return self.cursor.fetchone()[0]
+
+    def get_master(self, slave_id: int) -> int:
+        """
+        Возвращает телеграм-айдишник мастера по айдишнику слэйва
+
+        :param slave_id: айдишник слэйва
+        :return: айдишник мастера
+        """
+        self.cursor.execute(f"SELECT master FROM drawing WHERE slave = {slave_id}")
+        if not self.cursor.fetchone():
+            print(f'ERR: user {slave_id} not found in the database')
+            return config.ADMIN_CHAT
+
+        self.cursor.execute(f"SELECT master FROM drawing WHERE slave = {slave_id}")
+        return self.cursor.fetchone()[0]

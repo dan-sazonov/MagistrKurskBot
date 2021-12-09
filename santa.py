@@ -4,7 +4,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
 from messages import Messages
-from db import Santa, Main
+from db import Santa, Main, Drawing
 
 
 def init():
@@ -16,6 +16,7 @@ messages = Messages()
 mes_santa = Messages.Santa()
 db = Santa()
 db_main = Main()
+db_drawing = Drawing()
 
 
 class Poll(StatesGroup):
@@ -25,7 +26,7 @@ class Poll(StatesGroup):
     Name = State()
 
 
-@dp.message_handler(commands=['santa'], state=None)
+@dp.message_handler(commands=['santa_'], state=None)
 async def start_polling(message: types.Message):
     await message.answer(mes_santa.on_start, disable_web_page_preview=True)
     await message.answer(mes_santa.ask_wishes)
@@ -82,8 +83,46 @@ async def answer_q3(message: types.Message, state: FSMContext):
     await state.finish()
 
 
-@dp.message_handler(commands=['end'])
+@dp.message_handler(commands=['end_'])
 async def team_mes(message: types.Message):
     db.del_user(int(message.from_user.id))
     db_main.update_counter(message.from_user.id, 'end')
     await message.answer(mes_santa.end)
+
+
+inline_btn_1 = types.InlineKeyboardButton('Я отправил!', callback_data='sent_btn')
+inline_btn_2 = types.InlineKeyboardButton('Я получил!', callback_data='received_btn')
+sent_btn = types.InlineKeyboardMarkup().add(inline_btn_1)
+received_btn = types.InlineKeyboardMarkup().add(inline_btn_2)
+
+
+@dp.callback_query_handler(lambda c: c.data == 'sent_btn')
+async def process_callback_button1(callback_query: types.CallbackQuery):
+    uid = callback_query.from_user.id
+    await bot.answer_callback_query(callback_query.id)
+    db_drawing.change_sent_st(uid)
+    await bot.send_message(uid, '🔔 Отправка подарка подтверждена!')
+    await bot.send_message(db_drawing.get_slave(uid), '''📬<b> Вам посылка!</b>
+
+Именно это ты скоро услышишь от почтальона, ведь твой Тайный Санта уже отправил подарок!
+
+Нажми кнопку "Я получил!", когда получишь подарок ''', reply_markup=received_btn)
+
+
+@dp.callback_query_handler(lambda c: c.data == 'received_btn')
+async def process_callback_button1(callback_query: types.CallbackQuery):
+    uid = callback_query.from_user.id
+    await bot.answer_callback_query(callback_query.id)
+    db_drawing.change_received_st(uid)
+    await bot.send_message(uid, '🔔 Получение подарка подтверждено!')
+    await bot.send_message(db_drawing.get_master(uid), '🎁 Твой подопечный получил подарок!')
+
+
+@dp.message_handler(commands=['santa'])
+async def howto_mes(message: types.Message):
+    await message.answer(mes_santa.placeholder)
+
+
+@dp.message_handler(commands=['end'])
+async def howto_mes(message: types.Message):
+    await message.answer(mes_santa.placeholder)
