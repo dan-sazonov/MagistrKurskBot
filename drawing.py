@@ -9,9 +9,7 @@ import asyncio
 import santa
 
 from db import Santa, Drawing
-from dispatcher import dp, bot, storage
-from messages import Messages
-from aiogram import types
+from dispatcher import bot
 
 db = Santa()
 db_drawing = Drawing()
