@@ -104,6 +104,16 @@ async def help_mes(message: types.Message):
     db_main.update_counter(int(message.from_user.id), 'help')
 
 
+@dp.message_handler(commands=['santa'])
+async def howto_mes(message: types.Message):
+    await message.answer(mes_santa.placeholder)
+
+
+@dp.message_handler(commands=['end'])
+async def howto_mes(message: types.Message):
+    await message.answer(mes_santa.placeholder)
+
+
 @dp.message_handler()
 async def unknown_command_mes(message: types.Message):
     """

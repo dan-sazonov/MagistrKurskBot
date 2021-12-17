@@ -2,7 +2,6 @@ from dispatcher import dp, bot
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters import Command
 from messages import Messages
 from db import Santa, Main, Drawing
 
@@ -117,12 +116,3 @@ async def process_callback_button1(callback_query: types.CallbackQuery):
     await bot.send_message(uid, '🔔 Получение подарка подтверждено!')
     await bot.send_message(db_drawing.get_master(uid), '🎁 Твой подопечный получил подарок!')
 
-
-@dp.message_handler(commands=['santa'])
-async def howto_mes(message: types.Message):
-    await message.answer(mes_santa.placeholder)
-
-
-@dp.message_handler(commands=['end'])
-async def howto_mes(message: types.Message):
-    await message.answer(mes_santa.placeholder)
