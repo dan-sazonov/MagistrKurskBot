@@ -252,3 +252,15 @@ class Drawing:
 
         self.cursor.execute(f"SELECT master FROM drawing WHERE slave = {slave_id}")
         return self.cursor.fetchone()[0]
+
+
+class Poling:
+    def __init__(self):
+        db = psycopg2.connect(config.DATABASE_URL, sslmode='require')
+        cursor = db.cursor()
+        self.db, self.cursor = db, cursor
+
+        cursor.execute("CREATE TABLE IF NOT EXISTS drawing(master_id BIGINT PRIMARY KEY, master_name TEXT, "
+                       "slave_name TEXT, gift_sent BOOLEAN, gift_received BOOLEAN)")
+
+        db.commit()
