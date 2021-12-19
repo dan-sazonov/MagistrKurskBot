@@ -151,6 +151,18 @@ class Santa:
         self.cursor.execute(f"SELECT name, address, wishes FROM santa WHERE id = {user_id}")
         return tuple(map(lambda x: x.replace('\n', ' '), self.cursor.fetchall()[0]))
 
+    def get_users(self) -> list[tuple[int, str]]:
+        """
+        Возвращает список с айдишниками и флагами участия всех участников
+
+        :return: [(id, on_meeting), ]
+        """
+        players = []
+        self.cursor.execute(f"SELECT id, name FROM santa")
+        for player in self.cursor.fetchall():
+            players.append(player)
+        return players
+
 
 class Drawing:
     """
