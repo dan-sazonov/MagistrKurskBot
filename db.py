@@ -164,6 +164,10 @@ class Santa:
         return players
 
 
+def get_user_name(uid):
+    return Santa().get_info(uid)[0]
+
+
 class Drawing:
     """
     БД с инфой по жеребьевке
@@ -260,7 +264,33 @@ class Poling:
         cursor = db.cursor()
         self.db, self.cursor = db, cursor
 
-        cursor.execute("CREATE TABLE IF NOT EXISTS drawing(master_id BIGINT PRIMARY KEY, master_name TEXT, "
+        cursor.execute("CREATE TABLE IF NOT EXISTS poling(master_id BIGINT PRIMARY KEY, master_name TEXT, "
                        "slave_name TEXT, gift_sent BOOLEAN, gift_received BOOLEAN)")
 
         db.commit()
+
+    def add_snt_flag(self, master_id):
+        self.cursor.execute(f"SELECT master_id FROM poling WHERE master_id = {master_id}")
+        if not self.cursor.fetchone():
+            print(f'ERR: user {master_id} not found in the database')
+            return None
+
+        self.cursor.execute(f"UPDATE poling SET gift_sent = TRUE WHERE master_id = {master_id}")
+        self.db.commit()
+
+    def add_rcd_flag(self, master_id):
+        self.cursor.execute(f"SELECT master_id FROM poling WHERE master_id = {master_id}")
+        if not self.cursor.fetchone():
+            print(f'ERR: user {master_id} not found in the database')
+            return None
+
+        self.cursor.execute(f"UPDATE poling SET gift_received = TRUE WHERE master_id = {master_id}")
+        self.db.commit()
+
+    def add_slave_name(self, master_id, name):
+        self.cursor.execute(f"SELECT master_id FROM poling WHERE master_id = {master_id}")
+        if not self.cursor.fetchone():
+            self.cursor.execute("INSERT INTO poling(master_id, master_name, slave_name, gift_sent, gift_received) "
+                                "VALUES (%s,%s,%s, FALSE, FALSE)", (master_id, name, get_user_name(master_id)))
+            return None
+        self.db.commit()
