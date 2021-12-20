@@ -113,6 +113,12 @@ async def sent_alerts(pairs: list[tuple[int, int, bool]]) -> None:
 
 
 async def sent_questions() -> None:
+    """
+    Рассылает юзерам сообщение с началом повторного опроса
+
+    :return: None
+    """
+
     inline_btn_1 = types.InlineKeyboardButton('Поехали!', callback_data='start_pol')
     start_pol_kb = types.InlineKeyboardMarkup().add(inline_btn_1)
 

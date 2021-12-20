@@ -259,6 +259,10 @@ class Drawing:
 
 
 class Polling:
+    """
+    БД с инфой по повторному опросу
+    """
+
     def __init__(self):
         db = psycopg2.connect(config.DATABASE_URL, sslmode='require')
         cursor = db.cursor()
@@ -269,25 +273,14 @@ class Polling:
 
         db.commit()
 
-    # def add_snt_flag(self, master_id):
-    #     self.cursor.execute(f"SELECT master_id FROM polling WHERE master_id = {master_id}")
-    #     if not self.cursor.fetchone():
-    #         print(f'ERR: user {master_id} not found in the database')
-    #         return None
-    #
-    #     self.cursor.execute(f"UPDATE polling SET gift_sent = TRUE WHERE master_id = {master_id}")
-    #     self.db.commit()
-    #
-    # def add_rcd_flag(self, master_id):
-    #     self.cursor.execute(f"SELECT master_id FROM polling WHERE master_id = {master_id}")
-    #     if not self.cursor.fetchone():
-    #         print(f'ERR: user {master_id} not found in the database')
-    #         return None
-    #
-    #     self.cursor.execute(f"UPDATE polling SET gift_received = TRUE WHERE master_id = {master_id}")
-    #     self.db.commit()
+    def add_slave_name(self, master_id: int, name: str) -> None:
+        """
+        Добавялет в бд пользователя, его имя и имя слэйва
 
-    def add_slave_name(self, master_id, name):
+        :param master_id: айдишник мастера
+        :param name: имя слэйва
+        :return: None
+        """
         self.cursor.execute(f"SELECT master_id FROM polling WHERE master_id = {master_id}")
         if not self.cursor.fetchone():
             print(0)
@@ -295,7 +288,18 @@ class Polling:
                                 "VALUES (%s,%s,%s, 0, 0)", (master_id, get_user_name(master_id), name))
         self.db.commit()
 
-    def update_data(self, master_id, sent_state, received_state):
+    def update_data(self, master_id: int, sent_state: int, received_state: int) -> None:
+        """
+        Задает флаги в бд для конкретного мастера
+        1 - почта
+        2 - встреча
+        0 - никак
+
+        :param master_id: айдишник мастера
+        :param sent_state: статус получения
+        :param received_state: статус отправки
+        :return:
+        """
         self.cursor.execute(f"SELECT master_id FROM polling WHERE master_id = {master_id}")
         if not self.cursor.fetchone():
             print(f'ERR: user {master_id} not found in the database')
