@@ -151,6 +151,22 @@ class Santa:
         self.cursor.execute(f"SELECT name, address, wishes FROM santa WHERE id = {user_id}")
         return tuple(map(lambda x: x.replace('\n', ' '), self.cursor.fetchall()[0]))
 
+    def get_users(self) -> list[tuple[int, str]]:
+        """
+        Возвращает список с айдишниками и флагами участия всех участников
+
+        :return: [(id, on_meeting), ]
+        """
+        players = []
+        self.cursor.execute(f"SELECT id, name FROM santa")
+        for player in self.cursor.fetchall():
+            players.append(player)
+        return players
+
+
+def get_user_name(uid):
+    return Santa().get_info(uid)[0]
+
 
 class Drawing:
     """
@@ -240,3 +256,55 @@ class Drawing:
 
         self.cursor.execute(f"SELECT master FROM drawing WHERE slave = {slave_id}")
         return self.cursor.fetchone()[0]
+
+
+class Polling:
+    """
+    БД с инфой по повторному опросу
+    """
+
+    def __init__(self):
+        db = psycopg2.connect(config.DATABASE_URL, sslmode='require')
+        cursor = db.cursor()
+        self.db, self.cursor = db, cursor
+
+        cursor.execute("CREATE TABLE IF NOT EXISTS polling(master_id BIGINT PRIMARY KEY, master_name TEXT, "
+                       "slave_name TEXT, gift_sent INTEGER, gift_received INTEGER)")
+
+        db.commit()
+
+    def add_slave_name(self, master_id: int, name: str) -> None:
+        """
+        Добавялет в бд пользователя, его имя и имя слэйва
+
+        :param master_id: айдишник мастера
+        :param name: имя слэйва
+        :return: None
+        """
+        self.cursor.execute(f"SELECT master_id FROM polling WHERE master_id = {master_id}")
+        if not self.cursor.fetchone():
+            print(0)
+            self.cursor.execute("INSERT INTO polling(master_id, master_name, slave_name, gift_sent, gift_received) "
+                                "VALUES (%s,%s,%s, 0, 0)", (master_id, get_user_name(master_id), name))
+        self.db.commit()
+
+    def update_data(self, master_id: int, sent_state: int, received_state: int) -> None:
+        """
+        Задает флаги в бд для конкретного мастера
+        1 - почта
+        2 - встреча
+        0 - никак
+
+        :param master_id: айдишник мастера
+        :param sent_state: статус получения
+        :param received_state: статус отправки
+        :return:
+        """
+        self.cursor.execute(f"SELECT master_id FROM polling WHERE master_id = {master_id}")
+        if not self.cursor.fetchone():
+            print(f'ERR: user {master_id} not found in the database')
+            return None
+
+        self.cursor.execute(f"UPDATE polling SET gift_sent = {sent_state}, gift_received = {received_state}"
+                            f" WHERE master_id = {master_id}")
+        self.db.commit()
