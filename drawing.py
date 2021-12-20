@@ -122,15 +122,16 @@ async def sent_questions() -> None:
     inline_btn_1 = types.InlineKeyboardButton('Поехали!', callback_data='start_pol')
     start_pol_kb = types.InlineKeyboardMarkup().add(inline_btn_1)
 
-    users = [(385056286, 'dan')]
-    # users = db.get_users()
+    # users = [(385056286, 'dan'), (719583950, 'foo')]
+    users = db.get_users()
+    print(users)
     for user in users:
         await bot.send_message(chat_id=user[0], text='''Привет, дорогой друг! Это команда телеграм-канала "КРОМО "Магистр".
 
 Мы знаем, что ты принимал участие в игре "Тайный Санта "Магистра", и хотим сделать ее лучше! Для этого ответь, пожалуйста, на несколько вопросов.''', reply_markup=start_pol_kb)
         print(f'sent to {user[0]}')
         await bot.close()  # жуткий костыль, но без него все сыпется. А так только варнинг летит
-        await asyncio.sleep(30)
+        await asyncio.sleep(15)
 
 
 if __name__ == "__main__":
