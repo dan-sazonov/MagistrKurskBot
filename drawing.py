@@ -8,11 +8,13 @@ import random
 import asyncio
 import santa
 
-from db import Santa, Drawing
+from aiogram import types
+from db import Santa, Drawing, Polling
 from dispatcher import bot
 
 db = Santa()
 db_drawing = Drawing()
+db_polling = Polling()
 
 
 def get_pairs() -> list[tuple[int, int, bool]]:
@@ -110,13 +112,22 @@ async def sent_alerts(pairs: list[tuple[int, int, bool]]) -> None:
         await asyncio.sleep(30)
 
 
-if __name__ == "__main__":
-    # pairs_of_players = [(5079890730, 385056286, True), (385056286, 5079890730, True)]
-    pairs_of_players = get_pairs()
-    print(0)
-    add_pairs(pairs_of_players)
-    print(1)
+async def sent_questions() -> None:
+    inline_btn_1 = types.InlineKeyboardButton('Поехали!', callback_data='start_pol')
+    start_pol_kb = types.InlineKeyboardMarkup().add(inline_btn_1)
 
+    users = [(385056286, 'dan')]
+    # users = db.get_users()
+    for user in users:
+        await bot.send_message(chat_id=user[0], text='''Привет, дорогой друг! Это команда телеграм-канала "КРОМО "Магистр".
+
+Мы знаем, что ты принимал участие в игре "Тайный Санта "Магистра", и хотим сделать ее лучше! Для этого ответь, пожалуйста, на несколько вопросов.''', reply_markup=start_pol_kb)
+        print(f'sent to {user[0]}')
+        await bot.close()  # жуткий костыль, но без него все сыпется. А так только варнинг летит
+        await asyncio.sleep(30)
+
+
+if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(sent_alerts(pairs_of_players))
+    loop.run_until_complete(sent_questions())
     loop.close()

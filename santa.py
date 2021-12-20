@@ -3,7 +3,7 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from messages import Messages
-from db import Santa, Main, Drawing
+from db import Santa, Main, Drawing, Polling
 
 
 def init():
@@ -16,6 +16,7 @@ mes_santa = Messages.Santa()
 db = Santa()
 db_main = Main()
 db_drawing = Drawing()
+db_poll = Polling()
 
 
 class Poll(StatesGroup):
@@ -116,3 +117,69 @@ async def process_callback_button1(callback_query: types.CallbackQuery):
     await bot.send_message(uid, '🔔 Получение подарка подтверждено!')
     await bot.send_message(db_drawing.get_master(uid), '🎁 Твой подопечный получил подарок!')
 
+
+class Poll2(StatesGroup):
+    Name = State()
+    Sent = State()
+    Received = State()
+
+
+@dp.callback_query_handler(lambda c: c.data == 'start_pol', state=None)
+async def start_polling(callback_query: types.CallbackQuery):
+    uid = callback_query.from_user.id
+    await bot.answer_callback_query(callback_query.id)
+    await bot.send_message(uid, '''Напиши в этот чат фамилию, имя и отчество своего подопечного (того, кому ты делал подарок).''')
+    await Poll2.Name.set()
+
+
+@dp.message_handler(state=Poll2.Name)
+async def answer_q1(message: types.Message, state: FSMContext):
+    # сэйвим имя слэйва, спрашиваем про отправку
+    mes_kb = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    btn_1 = types.KeyboardButton('отправил по почте')
+    btn_2 = types.KeyboardButton('отдал лично на встрече')
+    btn_3 = types.KeyboardButton('ещё не отправил')
+    mes_kb.add(btn_1).add(btn_2).add(btn_3)
+
+    answer = message.text
+    uid = message.from_user.id
+    await state.update_data(name=answer)
+    await state.update_data(uid=uid)
+
+    await message.answer(text='''Скажи, пожалуйста, отправил ли ты подарок и каким образом?''', reply_markup=mes_kb)
+    await Poll2.Sent.set()
+
+
+@dp.message_handler(state=Poll2.Sent)
+async def answer_q2(message: types.Message, state: FSMContext):
+    mes_kb = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    btn_1 = types.KeyboardButton('да, получил по почте')
+    btn_2 = types.KeyboardButton('да, получил на встрече')
+    btn_3 = types.KeyboardButton('нет, ещё не получил')
+    mes_kb.add(btn_1).add(btn_2).add(btn_3)
+
+    answer = message.text
+    if answer not in ['отправил по почте', 'отдал лично на встрече', 'ещё не отправил']:
+        await message.reply('Я тебя не понял. Пожалуйста, используй кнопки для ответа')
+        return
+    answer = {'отправил по почте': 1, 'отдал лично на встрече': 2, 'ещё не отправил': 0}[answer]
+    await state.update_data(sent_state=answer)
+
+    await message.answer(text='''А получил ли сам свой подарок?''', reply_markup=mes_kb)
+    await Poll2.Received.set()
+
+
+@dp.message_handler(state=Poll2.Received)
+async def answer_q2(message: types.Message, state: FSMContext):
+    answer = message.text
+    if answer not in ['да, получил по почте', 'да, получил на встрече', 'нет, ещё не получил']:
+        await message.reply('Я тебя не понял. Пожалуйста, используй кнопки для ответа')
+        return
+    answer = {'да, получил по почте': 1, 'да, получил на встрече': 2, 'нет, ещё не получил': 0}[answer]
+
+    data = await state.get_data()
+    db_poll.add_slave_name(int(data.get('uid')), data.get('name'))
+    db_poll.update_data(int(data.get('uid')), data.get('sent_state'), answer)
+    print(f'got from {message.from_user.id}')
+    await message.answer(text='''Отлично! Ты нам очень помог. Большое спасибо :)''', reply_markup=types.ReplyKeyboardRemove())
+    await state.finish()
