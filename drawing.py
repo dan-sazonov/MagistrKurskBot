@@ -9,7 +9,7 @@ import asyncio
 import santa
 
 from aiogram import types
-from db import Santa, Drawing, Polling
+from db import Santa, Drawing, Polling, get_non_voting
 from dispatcher import bot
 
 db = Santa()
@@ -121,17 +121,17 @@ async def sent_questions() -> None:
 
     inline_btn_1 = types.InlineKeyboardButton('Я хочу ответить боту!', callback_data='start_pol')
     start_pol_kb = types.InlineKeyboardMarkup().add(inline_btn_1)
-
-    users = [(385056286, 'dan')]
+    # users = [(385056286, 'dan')]
     # users = db.get_users()
+    users = list(get_non_voting())
     print(users)
     for user in users:
-        await bot.send_message(chat_id=user[0], text='''Так-так, а кто это тут у нас? 🎅🎅🎅
+        await bot.send_message(chat_id=user, text='''Так-так, а кто это тут у нас? 🎅🎅🎅
 
 Ага, да это же тот, кто не ответил на сообщение от бота "Магистра" по "Тайному Санте"!
 
 Хо-хо-хо! Новый год уже совсем близко! Не расстраивай Санту и Дедушку Мороза, не то останешься без подарков...''', reply_markup=start_pol_kb)
-        print(f'sent to {user[0]}')
+        print(f'sent to {user}')
         await bot.close()  # жуткий костыль, но без него все сыпется. А так только варнинг летит
         await asyncio.sleep(15)
 
