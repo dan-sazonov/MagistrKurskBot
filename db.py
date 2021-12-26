@@ -308,3 +308,19 @@ class Polling:
         self.cursor.execute(f"UPDATE polling SET gift_sent = {sent_state}, gift_received = {received_state}"
                             f" WHERE master_id = {master_id}")
         self.db.commit()
+
+    def get_masters(self):
+        players = set()
+        self.cursor.execute(f"SELECT master_id FROM polling")
+        for player in self.cursor.fetchall():
+            players.add(player[0])
+        return players
+
+
+def get_non_voting() -> set:
+    """
+    Возвращает множество айдишников, которые играли в ТС но не проголосовали в опросе
+
+    :return: set(id,)
+    """
+    return set(i[0] for i in Santa().get_users()) - Polling().get_masters()
