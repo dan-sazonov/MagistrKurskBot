@@ -1,9 +1,10 @@
-from dispatcher import dp, bot
-from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from messages import Messages
+from aiogram.dispatcher.filters.state import StatesGroup, State
+
 from db import Santa, Main, Drawing, Polling
+from dispatcher import dp, bot
+from messages import Messages
 
 
 def init():
@@ -181,5 +182,6 @@ async def answer_q2(message: types.Message, state: FSMContext):
     db_poll.add_slave_name(int(data.get('uid')), data.get('name'))
     db_poll.update_data(int(data.get('uid')), data.get('sent_state'), answer)
     print(f'got from {message.from_user.id}')
-    await message.answer(text='''Отлично! Ты нам очень помог. Большое спасибо :)''', reply_markup=types.ReplyKeyboardRemove())
+    await message.answer(text='''Отлично! Ты нам очень помог. Большое спасибо :)''',
+                         reply_markup=types.ReplyKeyboardRemove())
     await state.finish()

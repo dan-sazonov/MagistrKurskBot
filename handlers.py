@@ -4,14 +4,14 @@
 лежать в файле `messages.py`.
 """
 
-import config
-import features
-import db
-import santa
+from aiogram import types
 
+import config
+import db
+import features
+import santa
 from dispatcher import dp, bot, storage
 from messages import Messages
-from aiogram import types
 
 messages = Messages()
 mes_songs = Messages.Songs()

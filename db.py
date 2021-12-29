@@ -2,11 +2,13 @@
 Функции для работы с бд
 """
 
-import config
-import psycopg2
 import datetime
-
 from typing import List, Tuple
+
+import psycopg2
+
+import config
+
 
 class Main:
     """
@@ -165,7 +167,7 @@ class Santa:
         return players
 
 
-def get_user_name(uid:int) -> str:
+def get_user_name(uid: int) -> str:
     """
     Возвращает фио чела из ТС по айдишнику
 
