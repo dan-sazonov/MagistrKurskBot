@@ -6,6 +6,7 @@ import config
 import psycopg2
 import datetime
 
+from typing import List, Tuple
 
 class Main:
     """
@@ -125,7 +126,7 @@ class Santa:
 
         self.db.commit()
 
-    def get_players(self) -> list[tuple[int, bool]]:
+    def get_players(self) -> List[Tuple[int, bool]]:
         """
         Возвращает список с айдишниками и флагами участия всех участников
 
@@ -151,7 +152,7 @@ class Santa:
         self.cursor.execute(f"SELECT name, address, wishes FROM santa WHERE id = {user_id}")
         return tuple(map(lambda x: x.replace('\n', ' '), self.cursor.fetchall()[0]))
 
-    def get_users(self) -> list[tuple[int, str]]:
+    def get_users(self) -> List[Tuple[int, str]]:
         """
         Возвращает список с айдишниками и флагами участия всех участников
 
@@ -183,7 +184,7 @@ class Drawing:
 
         db.commit()
 
-    def add_pair(self, data: tuple[int, int, bool]) -> None:
+    def add_pair(self, data: Tuple[int, int, bool]) -> None:
         """
         Добавляет в бд пару участников. master - санта, slave - подопечный, on_meeting - будут ли m/s на встрече
 
