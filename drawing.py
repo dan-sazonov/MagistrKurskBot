@@ -4,11 +4,12 @@
 автоматизировать ручную работу, переписывать его я смысла не вижу
 """
 
-import random
 import asyncio
-import santa
+import random
 
 from aiogram import types
+
+import santa
 from db import Santa, Drawing, Polling, get_non_voting
 from dispatcher import bot
 
@@ -130,7 +131,8 @@ async def sent_questions() -> None:
 
 Ага, да это же тот, кто не ответил на сообщение от бота "Магистра" по "Тайному Санте"!
 
-Хо-хо-хо! Новый год уже совсем близко! Не расстраивай Санту и Дедушку Мороза, не то останешься без подарков...''', reply_markup=start_pol_kb)
+Хо-хо-хо! Новый год уже совсем близко! Не расстраивай Санту и Дедушку Мороза, не то останешься без подарков...''',
+                               reply_markup=start_pol_kb)
         print(f'sent to {user}')
         await bot.close()  # жуткий костыль, но без него все сыпется. А так только варнинг летит
         await asyncio.sleep(15)

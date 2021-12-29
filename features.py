@@ -2,8 +2,8 @@
 Фичи общего назначения, которые не получилось запихнуть в другие файлы
 """
 
-import random
 import os
+import random
 from collections import deque
 
 
@@ -20,13 +20,16 @@ def get_memes():
     if not memes:
         raise FileNotFoundError('./memes dir not found')
 
-    with open('./memes/log_memes.txt', 'r') as f:
-        [last_meme] = deque(f, maxlen=1) or ['']
+    if os.path.exists('./memes/log_memes.txt'):
+        with open('./memes/log_memes.txt', 'r') as f:
+            [last_meme] = deque(f, maxlen=1) or ['']
+    else:
+        last_meme = 0
 
     while True:
         output = random.choice(memes)
         if output != last_meme:
-            with open('./memes/log_memes.txt', 'w') as f:
+            with open('./memes/log_memes.txt', 'w+') as f:
                 f.write(output)
             break
 

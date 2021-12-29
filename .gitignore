@@ -1,5 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
-### Example user template template
 ### Example user template
 
 # IntelliJ project files
@@ -148,3 +147,6 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+### logs and configs
+/memes/log_memes.txt

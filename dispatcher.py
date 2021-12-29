@@ -3,12 +3,13 @@
 Все, что связано с обработкой сообщений, должно быть помещено в `handlers.py`.
 """
 import logging
-import config
-import aiogram
-import messages
 
-from filters import IsOwnerFilter, IsAdminFilter, MemberCanRestrictFilter
+import aiogram
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+
+import config
+import messages
+from filters import IsOwnerFilter, IsAdminFilter, MemberCanRestrictFilter
 
 mes_songs = messages.Messages.Songs()
 mes_contacts = messages.Messages.Contacts()
