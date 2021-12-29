@@ -165,7 +165,13 @@ class Santa:
         return players
 
 
-def get_user_name(uid):
+def get_user_name(uid:int) -> str:
+    """
+    Возвращает фио чела из ТС по айдишнику
+
+    :param uid: телеграм-айдишник чела
+    :return: фио чела
+    """
     return Santa().get_info(uid)[0]
 
 
@@ -309,3 +315,24 @@ class Polling:
         self.cursor.execute(f"UPDATE polling SET gift_sent = {sent_state}, gift_received = {received_state}"
                             f" WHERE master_id = {master_id}")
         self.db.commit()
+
+    def get_masters(self) -> set:
+        """
+        Возвращает множество айдишников, которые проголосовали в опросе
+
+        :return: set(id:int,)
+        """
+        players = set()
+        self.cursor.execute(f"SELECT master_id FROM polling")
+        for player in self.cursor.fetchall():
+            players.add(player[0])
+        return players
+
+
+def get_non_voting() -> set:
+    """
+    Возвращает множество айдишников, которые играли в ТС но не проголосовали в опросе
+
+    :return: set(id:int,)
+    """
+    return set(i[0] for i in Santa().get_users()) - Polling().get_masters()
