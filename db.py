@@ -330,6 +330,13 @@ class Polling:
             players.add(player[0])
         return players
 
+    def get_f(self, dhead):
+        self.cursor.execute(f"SELECT master_name FROM polling WHERE slave_name = '{dhead}'")
+        # for player in self.cursor.fetchall():
+        #     players.add(player[0])
+        # return players
+        return self.cursor.fetchall()
+
 
 def get_non_voting() -> set:
     """
@@ -338,3 +345,16 @@ def get_non_voting() -> set:
     :return: set(id:int,)
     """
     return set(i[0] for i in Santa().get_users()) - Polling().get_masters()
+
+
+def get_d():
+    ans = []
+    for i in Santa().get_players():
+        uid = i[0]
+        name = Santa().get_info(uid)[0]  # имя чела, которому прилетит сообщение
+        master = Polling().get_f(name)  # имя чела, котрорый дарил ^этому^ челу подарок
+        tmp = (uid, master[0][0] if master else False)
+        print(f'ONFLOW: {tmp}')
+        ans.append(tmp)
+
+    return ans  # (айдишник, кому пишем; имя, кто ему дарил)

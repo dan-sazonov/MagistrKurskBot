@@ -185,3 +185,12 @@ async def answer_q2(message: types.Message, state: FSMContext):
     await message.answer(text='''Отлично! Ты нам очень помог. Большое спасибо :)''',
                          reply_markup=types.ReplyKeyboardRemove())
     await state.finish()
+
+
+@dp.callback_query_handler(lambda c: c.data == 'not_rcd')
+async def start_polling(callback_query: types.CallbackQuery):
+    uid = callback_query.from_user.id
+    await bot.answer_callback_query(callback_query.id)
+    print(f'FDUP: {uid}')
+    await bot.send_message(uid, '''✔''')
+
