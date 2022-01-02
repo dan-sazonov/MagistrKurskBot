@@ -1,18 +1,20 @@
 """
 Файл с конфигами бота
 Здесь задаем глобальные константы и возможно функции, настраивающие (((что-то))).
-"Why not json/csv/yaml/something else? - Fuck you, here's why".
 """
 import os
+
 from aiogram import types
 
-ADMIN_ID = {385056286, }
-ADMIN_CHAT = 385056286
+ADMIN_ID = {385056286, 1740178046, 1202704228, 421770409, 1070984836} # дэн, катя, миша, полина, даша
+ADMIN_CHAT = 385056286  # @dan_sazonov
 
 ENABLE_ECHO = False  # все команды будут попадать в эхо
+DEBUG_MODE = True  # режим отладки, запуск на втором домене
 
-# prerequisites
-API_TOKEN = os.getenv('BOT_TOKEN')
+# запрашиваем токены
+req = 'DEV_TOKEN' if DEBUG_MODE else 'BOT_TOKEN'
+API_TOKEN = os.getenv(req)
 if not API_TOKEN:
     exit('Err: BOT_TOKEN variable is missing')
 
@@ -22,12 +24,4 @@ if not DATABASE_URL:
 
 
 async def set_commands(dp):
-    await dp.bot.set_my_commands([
-        types.BotCommand('songs', 'Песенник'),
-        types.BotCommand('howto', 'Как попасть на смену'),
-        types.BotCommand('team', 'Педсостав центра'),
-        types.BotCommand('memes', 'Получить мем'),
-        types.BotCommand('contacts', 'Контакты КРОМО "Магистр"'),
-        types.BotCommand('credits', 'Наша команда'),
-        types.BotCommand('help', 'Краткая справка')
-    ])
+    await dp.bot.set_my_commands([types.BotCommand('help', 'Краткая справка')])
