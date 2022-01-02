@@ -11,6 +11,9 @@ import config
 
 @dataclass
 class Messages:
+    """
+    Тексты сообщений, отправляемых ботом
+    """
     start_polling: str = '🔔 Тестовый бот запущен' if config.DEBUG_MODE else '🔔 Основной бот запущен'
     stop_polling: str = '🔔 Тестовый бот остановлен' if config.DEBUG_MODE else '🔔 Основной бот остановлен'
 
@@ -156,7 +159,14 @@ Inst: <a href="https://www.instagram.com/dan_sazonov">@dan_sazonov</a>
 
 
 class Keyboards:
+    """
+    Настройки клавиатур, прикрепляемых к сообщениям
+    """
+
     def __init__(self):
+        """
+        Кортежи с парами (текст, ссылка)
+        """
         self.songs_kb_txt = (('📌 переходите на сайт', 'http://magistrarium.ru/песенник'),
                              ('📥 скачивайте приложение "Песенник"', 'https://trashbox.ru/topics/148839/pesennik-1.1'))
         self.contacts_kb_txt = (('🔔 Группа ВКонтакте', 'https://vk.com/kromomagistr'),
@@ -167,7 +177,12 @@ class Keyboards:
                                  'https://www.youtube.com/c/%25D0%259C%25D0%25B0%25D0%25B3%25D0%25B8%25D1%2581%25D1%2582%25D1%2580%25D0%25A2%25D0%2592'),
                                 ('🔔 Канал в Telegram', 'https://t.me/magistrKursk'))
 
-    def get_songs_kb(self):
+    def get_songs_kb(self) -> types.InlineKeyboardMarkup:
+        """
+        Возвращает объект с готовой настроенной клавиатурой для сообщения, вызываемого командой /songs
+
+        :return: объект aiogram.types.InlineKeyboardMarkup
+        """
         songs_kb = types.InlineKeyboardMarkup()
         for key in self.songs_kb_txt:
             songs_kb.add(types.InlineKeyboardButton(key[0], url=key[1]))
@@ -175,6 +190,11 @@ class Keyboards:
         return songs_kb
 
     def get_contacts_kb(self):
+        """
+       Возвращает объект с готовой настроенной клавиатурой для сообщения, вызываемого командой /contacts
+
+       :return: объект aiogram.types.InlineKeyboardMarkup
+       """
         contacts_kb = types.InlineKeyboardMarkup()
         for key in self.contacts_kb_txt:
             contacts_kb.add(types.InlineKeyboardButton(key[0], url=key[1]))
