@@ -26,13 +26,13 @@ santa.init()  # костыль, не трогать
 
 
 async def on_startup(_):
-    await bot.send_message(chat_id=config.ADMIN_CHAT, text=messages.start_polling)
+    await bot.send_message(chat_id=config.LOG_CHAT, text=messages.start_polling)
 
 
 async def on_shutdown(_):
     await bot.close()
     await storage.close()
-    await bot.send_message(chat_id=config.ADMIN_CHAT, text=messages.stop_polling)
+    await bot.send_message(chat_id=config.LOG_CHAT, text=messages.stop_polling)
 
 
 @dp.message_handler(commands=['songs'])
