@@ -26,7 +26,6 @@ santa.init()  # костыль, не трогать
 
 
 async def on_startup(_):
-    await config.set_commands(dp)
     await bot.send_message(chat_id=config.ADMIN_CHAT, text=messages.start_polling)
 
 

@@ -4,8 +4,6 @@
 """
 import os
 
-from aiogram import types
-
 ADMIN_ID = {385056286, 1740178046, 1202704228, 421770409, 1070984836} # дэн, катя, миша, полина, даша
 ADMIN_CHAT = 385056286  # @dan_sazonov
 
@@ -21,7 +19,3 @@ if not API_TOKEN:
 DATABASE_URL = os.getenv('DATABASE_URL')
 if not DATABASE_URL:
     exit('Err: DATABASE_URL variable is missing')
-
-
-async def set_commands(dp):
-    await dp.bot.set_my_commands([types.BotCommand('help', 'Краткая справка')])
