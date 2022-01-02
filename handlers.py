@@ -10,14 +10,10 @@ import config
 import db
 import features
 from dispatcher import dp, bot, storage
-from messages import Messages
+from messages import Messages, Keyboards
 
 messages = Messages()
-mes_songs = Messages.Songs()
-mes_contacts = Messages.Contacts()
-mes_howto = Messages.HowTo()
-mes_team = Messages.Team()
-mes_credits = Messages.Credits()
+keyboards = Keyboards()
 db_main = db.Main()
 
 
@@ -33,35 +29,25 @@ async def on_shutdown(_):
 
 @dp.message_handler(commands=['songs'])
 async def songs_mes(message: types.Message):
-    # создаем клаву
-    songs_kb = types.InlineKeyboardMarkup()
-    for key in mes_songs.mes_kb:
-        songs_kb.add(types.InlineKeyboardButton(key[0], url=key[1]))
-
-    await message.answer(mes_songs.mes_text, reply_markup=songs_kb)
+    await message.answer(messages.songs, reply_markup=keyboards.get_songs_kb())
     db_main.update_counter(int(message.from_user.id), 'songs')
 
 
 @dp.message_handler(commands=['contacts'])
 async def contacts_mes(message: types.Message):
-    # создаем клаву
-    contacts_kb = types.InlineKeyboardMarkup()
-    for key in mes_contacts.mes_kb:
-        contacts_kb.add(types.InlineKeyboardButton(key[0], url=key[1]))
-
-    await message.answer(mes_contacts.mes_text, reply_markup=contacts_kb)
+    await message.answer(messages.contacts, reply_markup=keyboards.get_contacts_kb())
     db_main.update_counter(int(message.from_user.id), 'contacts')
 
 
 @dp.message_handler(commands=['howto'])
 async def howto_mes(message: types.Message):
-    await message.answer(mes_howto.mes_text)
+    await message.answer(messages.howto)
     db_main.update_counter(int(message.from_user.id), 'howto')
 
 
 @dp.message_handler(commands=['team'])
 async def team_mes(message: types.Message):
-    await message.answer(mes_team.mes_text)
+    await message.answer(messages.team)
     db_main.update_counter(int(message.from_user.id), 'team')
 
 
@@ -73,7 +59,7 @@ async def memes_mes(message: types.Message):
 
 @dp.message_handler(commands=['credits'])
 async def memes_mes(message: types.Message):
-    await message.answer(mes_credits.mes_text, disable_web_page_preview=True)
+    await message.answer(messages.credit, disable_web_page_preview=True)
     db_main.update_counter(int(message.from_user.id), 'credits')
 
 

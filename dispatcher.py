@@ -8,11 +8,7 @@ import aiogram
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 import config
-import messages
 from filters import IsOwnerFilter, IsAdminFilter, MemberCanRestrictFilter
-
-mes_songs = messages.Messages.Songs()
-mes_contacts = messages.Messages.Contacts()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
