@@ -9,7 +9,6 @@ from aiogram import types
 import config
 import db
 import features
-import santa
 from dispatcher import dp, bot, storage
 from messages import Messages
 
@@ -19,10 +18,7 @@ mes_contacts = Messages.Contacts()
 mes_howto = Messages.HowTo()
 mes_team = Messages.Team()
 mes_credits = Messages.Credits()
-mes_santa = Messages.Santa()
 db_main = db.Main()
-
-santa.init()  # костыль, не трогать
 
 
 async def on_startup(_):
@@ -103,27 +99,17 @@ async def help_mes(message: types.Message):
     db_main.update_counter(int(message.from_user.id), 'help')
 
 
-@dp.message_handler(commands=['santa'])
-async def howto_mes(message: types.Message):
-    await message.answer(mes_santa.placeholder)
+@dp.message_handler(commands=['santa', 'end'])
+async def outdated_mes(message: types.Message):
+    await message.answer(messages.placeholder)
 
 
-@dp.message_handler(commands=['end'])
-async def howto_mes(message: types.Message):
-    await message.answer(mes_santa.placeholder)
+@dp.callback_query_handler(lambda c: c.data in {'not_rcd', 'start_pol', 'received_btn', 'sent_btn'})
+async def outdated_callback(callback_query: types.CallbackQuery):
+    uid = callback_query.from_user.id
+    await bot.answer_callback_query(callback_query.id, text='¯\\_(ツ)_/¯', show_alert=True)
 
 
 @dp.message_handler()
 async def unknown_command_mes(message: types.Message):
-    """
-    Пересылаем все сообщения и айдишник юзеру, чисто для тестов
-    Если эхо выключено, шлем сообщение, что команда не понятна
-
-    :param message: Параметры сообщения, которое прилетело от юзера
-    :return: None
-    """
-    if config.ENABLE_ECHO:
-        await message.reply(message.text)
-        await message.answer(f'usr id: {message.from_user.id}')
-    else:
-        await message.reply(messages.not_command)
+    await message.reply(messages.not_command)
