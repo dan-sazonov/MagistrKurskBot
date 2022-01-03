@@ -4,6 +4,7 @@
 """
 from aiogram import executor
 
+import exceptions
 import handlers
 from dispatcher import dp
 
