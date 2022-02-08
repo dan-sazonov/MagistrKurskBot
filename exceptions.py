@@ -8,18 +8,9 @@ from aiogram import types
 from dispatcher import dp
 
 
-@dp.errors_handler
-async def errors_handler(update: types.Update, exception: exc.TelegramAPIError):
-    if isinstance(exception, exc.CantParseEntities):
-        print(f'CantParseEntities: {exception} \nUpdate: {update}')
+class CustomExc:
+    @dp.errors_handler(exception=exc.ChatNotFound)
+    async def errors_handler(self: types.Update, exception: exc.TelegramAPIError):
+        msg = f'{exception} \nUpdate: {self}'
+        print(msg)
         return True
-
-    if isinstance(exception, exc.BadRequest):
-        print(f'BadRequest: {exception} \nUpdate: {update}')
-        return True
-
-    if isinstance(exception, exc.TelegramAPIError):
-        print(f'TelegramAPIError: {exception} \nUpdate: {update}')
-        return True
-
-    print(f'Update: {update} \n{exception}')
