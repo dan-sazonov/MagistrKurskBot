@@ -9,8 +9,8 @@ from dispatcher import dp
 
 
 class AiogramExc:
-    @dp.errors_handler(exception=exc.ChatNotFound)
+    @dp.errors_handler()
     async def errors_handler(self: types.Update, exception: exc.TelegramAPIError):
-        msg = f"{exception}. This exception was't caught with `try`. update_id: {self['update_id']}"
+        msg = f"Uncaught exception: {exception}. update_id: {self['update_id']}"
         print(msg)
         return True
