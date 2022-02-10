@@ -3,7 +3,6 @@
 Этот файл может содержать функции, отвечающие за визуальное отображение и валидацию данных, тексты сообщениий должны
 лежать в файле `messages.py`.
 """
-import aiogram.utils.exceptions as exc
 from aiogram import types
 
 import config
@@ -96,7 +95,6 @@ async def outdated_mes(message: types.Message):
 
 @dp.callback_query_handler(lambda c: c.data in {'not_rcd', 'start_pol', 'received_btn', 'sent_btn'})
 async def outdated_callback(callback_query: types.CallbackQuery):
-    uid = callback_query.from_user.id
     await bot.answer_callback_query(callback_query.id, text='¯\\_(ツ)_/¯', show_alert=True)
 
 
