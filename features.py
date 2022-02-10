@@ -7,18 +7,16 @@ import random
 from collections import deque
 
 
-def get_memes():
+def get_memes() -> str:
     """
-    Возвращает рандомный мемас из заранее отобранных
+    Возвращает путь к рандомному мемасу из заранее отобранных, или пустую строку, если мемы не найдены
 
-    :return: путь к пикче
+    :return: путь к пикче или пустая строка
     """
-    memes = []
     if os.path.exists('./memes'):
         memes = list(filter(lambda x: x.endswith('.jpg'), os.listdir('./memes')))
-
-    if not memes:
-        raise FileNotFoundError('./memes dir not found')
+    else:
+        return ''
 
     if os.path.exists('./memes/log_memes.txt'):
         with open('./memes/log_memes.txt', 'r') as f:

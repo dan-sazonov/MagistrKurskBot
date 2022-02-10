@@ -3,7 +3,7 @@
 Этот файл может содержать функции, отвечающие за визуальное отображение и валидацию данных, тексты сообщениий должны
 лежать в файле `messages.py`.
 """
-
+import aiogram.utils.exceptions as exc
 from aiogram import types
 
 import config
@@ -53,7 +53,11 @@ async def team_mes(message: types.Message):
 
 @dp.message_handler(commands=['memes'])
 async def memes_mes(message: types.Message):
-    await message.answer_photo(types.InputFile(features.get_memes()))
+    out = features.get_memes()
+    if out:
+        await message.answer_photo(types.InputFile(out))
+    else:
+        await message.answer('Мемов нет(')
     db_main.update_counter(int(message.from_user.id), 'memes')
 
 
