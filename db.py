@@ -15,7 +15,12 @@ class Main:
     """
 
     def __init__(self):
-        db = psycopg2.connect(config.DATABASE_URL, sslmode='require')
+        try:
+            db = psycopg2.connect(config.DATABASE_URL, sslmode='require')
+        except TypeError or psycopg2.ProgrammingError:
+            msg = f"Failed connection to the database or incorrect URL"
+            print(msg)
+            return
         cursor = db.cursor()
         self.db, self.cursor = db, cursor
 
