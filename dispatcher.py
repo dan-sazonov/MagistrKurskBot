@@ -2,7 +2,7 @@
 Создает и настраивает бота
 Все, что связано с обработкой сообщений, должно быть помещено в `handlers.py`.
 """
-import logging
+import logger
 
 import aiogram
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -11,12 +11,8 @@ import config
 import filters
 from middlewares import Middle
 
-# прикручиваем логирование
-logging.basicConfig(level=logging.INFO)
-
-# кастомные костыльные логи TODO выпилить
-if config.ENABLE_ECHO:
-    print('INFO: echo mode enable')
+# логирование
+logger.set_basic_logger()
 
 # инит
 TOKEN = config.API_TOKEN
