@@ -13,7 +13,7 @@ def _safe_mkdir(path: str) -> None:
 
 def set_basic_logger():
     _safe_mkdir('main.log')
-    logging.basicConfig(level=logging.INFO, filename='./logs/aiogram.log', filemode='w+', format=_log_format)
+    logging.basicConfig(level=logging.INFO, filename='./logs/main.log', filemode='w+', format=_log_format)
 
 
 def get_file_handler():
