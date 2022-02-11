@@ -83,6 +83,10 @@ class Main:
         :return: None
         """
         self.add_counter(user_id)
+
+        if command in {'songs', 'contacts', 'howto', 'team', 'memes', 'credits', 'help', 'start', 'stop',
+                       'santa', 'end'}:
+            self.cursor.execute(f"UPDATE messages SET {command + '_'} = {command + '_'} + {count} WHERE id = {user_id}")
+
         self.cursor.execute(f"UPDATE users SET messages = messages + {count} WHERE id = {user_id}")
-        self.cursor.execute(f"UPDATE messages SET {command + '_'} = {command + '_'} + {count} WHERE id = {user_id}")
         self.db.commit()
