@@ -91,8 +91,14 @@ async def outdated_callback(callback_query: types.CallbackQuery):
 
 
 @dp.message_handler(is_admin=True, commands=['test'])
-async def outdated_mes(message: types.Message):
-    await message.answer('fuck')
+async def test_state(message: types.Message):
+    await message.answer('🔔 Все прекрасно!')
+
+
+@dp.message_handler(is_admin=True, commands=['disable'])
+async def disable_bot(message: types.Message):
+    await message.answer('🔔 Бот будет остановлен')
+    await on_shutdown(None)
 
 
 @dp.message_handler()

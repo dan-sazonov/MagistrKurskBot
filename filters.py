@@ -11,5 +11,4 @@ class IsAdmin(BoundFilter):
         self.is_owner = is_admin
 
     async def check(self, message: types.Message):
-        print(message.from_user.id, config.ADMINS_ID)
         return message.from_user.id in config.ADMINS_ID
