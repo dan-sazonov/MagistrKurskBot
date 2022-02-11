@@ -5,10 +5,10 @@
 import logging
 
 import aiogram
-from middlewares import Middle
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 import config
+from middlewares import Middle
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
