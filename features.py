@@ -6,6 +6,10 @@ import os
 import random
 from collections import deque
 
+import logger
+
+log = logger.get_logger(__name__)
+
 
 def get_memes() -> str:
     """
@@ -16,6 +20,7 @@ def get_memes() -> str:
     if os.path.exists('./memes'):
         memes = list(filter(lambda x: x.endswith('.jpg'), os.listdir('./memes')))
     else:
+        log.warning("Directory with memes (expected ./memes/) wasn't found")
         return ''
 
     if os.path.exists('./logs/log_memes.txt'):
