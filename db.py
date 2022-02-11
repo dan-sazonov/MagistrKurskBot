@@ -7,6 +7,9 @@ import datetime
 import psycopg2
 
 import config
+import logger
+
+log = logger.get_logger(__name__)
 
 
 class Main:
@@ -16,10 +19,10 @@ class Main:
 
     def __init__(self):
         try:
+            log.info('Trying to connect to the database')
             db = psycopg2.connect(config.DATABASE_URL, sslmode='require')
         except TypeError or psycopg2.ProgrammingError:
-            msg = f"Failed connection to the database or incorrect URL"
-            print(msg)
+            log.warning('Failed connection to the database or incorrect URL')
             return
         cursor = db.cursor()
         self.db, self.cursor = db, cursor
@@ -30,6 +33,7 @@ class Main:
                        "howto_ INTEGER, team_ INTEGER, memes_ INTEGER, credits_ INTEGER, help_ INTEGER, start_ INTEGER,"
                        "stop_ INTEGER, santa_ INTEGER, end_ INTEGER)")
         db.commit()
+        log.info('Successful connection to the database')
 
     def add_counter(self, user_id: int) -> None:
         """
@@ -43,6 +47,7 @@ class Main:
             self.cursor.execute("INSERT INTO messages(id, songs_, contacts_, howto_, team_, memes_, credits_, help_,"
                                 "start_, stop_, santa_, end_) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                                 (user_id, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+            log.info(f'The `{user_id}` has been added to the `messages` table')
         self.db.commit()
 
     def add_user(self, user_id: int, username: str) -> None:
@@ -57,6 +62,7 @@ class Main:
         if not self.cursor.fetchone():
             self.cursor.execute("INSERT INTO users(id, username, join_date, messages) VALUES (%s, %s, %s, %s)",
                                 (user_id, username, datetime.datetime.now(), 0))
+            log.info(f'The `{user_id}` has been added to the `users` table')
         self.db.commit()
         self.add_counter(user_id)
 
@@ -71,6 +77,7 @@ class Main:
             self.cursor.execute(f"SELECT id FROM {database} WHERE id = {user_id}")
             if self.cursor.fetchone():
                 self.cursor.execute(f"DELETE FROM {database} WHERE id = {user_id}")
+                log.info(f'The `{user_id}` has been deleted from the `{database}` table')
             self.db.commit()
 
     def update_counter(self, user_id: int, command: str, count=1) -> None:
@@ -87,6 +94,8 @@ class Main:
         if command in {'songs', 'contacts', 'howto', 'team', 'memes', 'credits', 'help', 'start', 'stop',
                        'santa', 'end'}:
             self.cursor.execute(f"UPDATE messages SET {command + '_'} = {command + '_'} + {count} WHERE id = {user_id}")
+            log.info(f'The value of messages.`{command}` has been increased for `{user_id}` by {count}')
 
         self.cursor.execute(f"UPDATE users SET messages = messages + {count} WHERE id = {user_id}")
+        log.info(f'The value of users.messages has been increased for `{user_id}` by {count}')
         self.db.commit()
