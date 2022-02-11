@@ -18,8 +18,8 @@ def get_memes() -> str:
     else:
         return ''
 
-    if os.path.exists('./memes/log_memes.txt'):
-        with open('./memes/log_memes.txt', 'r') as f:
+    if os.path.exists('./logs/log_memes.txt'):
+        with open('./logs/log_memes.txt', 'r') as f:
             [last_meme] = deque(f, maxlen=1) or ['']
     else:
         last_meme = 0
@@ -27,7 +27,7 @@ def get_memes() -> str:
     while True:
         output = random.choice(memes)
         if output != last_meme:
-            with open('./memes/log_memes.txt', 'w+') as f:
+            with open('./logs/log_memes.txt', 'w+') as f:
                 f.write(output)
             break
 
