@@ -10,16 +10,17 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 import config
 from middlewares import Middle
 
-# Configure logging
+# прикручиваем логирование
 logging.basicConfig(level=logging.INFO)
 
-# кастомные костыльные логи
+# кастомные костыльные логи TODO выпилить
 if config.ENABLE_ECHO:
     print('INFO: echo mode enable')
 
-# init
+# инит
 TOKEN = config.API_TOKEN
 bot = aiogram.Bot(token=TOKEN, parse_mode="HTML")
 storage = MemoryStorage()
+
 dp = aiogram.Dispatcher(bot, storage=storage)
 dp.middleware.setup(Middle())
