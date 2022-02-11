@@ -4,6 +4,7 @@
 лежать в файле `messages.py`.
 """
 from aiogram import types
+import aiogram.dispatcher.filters as dp_filters
 
 import config
 import db
@@ -60,7 +61,7 @@ async def memes_mes(message: types.Message):
     await message.answer(messages.credit, disable_web_page_preview=True)
 
 
-@dp.message_handler(commands=['subscribe', 'start'])
+@dp.message_handler(dp_filters.CommandStart())
 async def start_mes(message: types.Message):
     await message.answer(messages.subscribe)
     await message.answer(messages.do_unsubscribe)
@@ -74,7 +75,7 @@ async def stop_mes(message: types.Message):
     await message.answer(messages.do_subscribe)
 
 
-@dp.message_handler(commands=['help', '!', '?'])
+@dp.message_handler(dp_filters.CommandHelp())
 async def help_mes(message: types.Message):
     await message.answer(messages.help, disable_web_page_preview=True)
 
