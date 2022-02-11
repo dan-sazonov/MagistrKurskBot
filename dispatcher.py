@@ -8,6 +8,7 @@ import aiogram
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 import config
+import filters
 from middlewares import Middle
 
 # прикручиваем логирование
@@ -24,3 +25,4 @@ storage = MemoryStorage()
 
 dp = aiogram.Dispatcher(bot, storage=storage)
 dp.middleware.setup(Middle())
+dp.bind_filter(filters.IsAdmin)

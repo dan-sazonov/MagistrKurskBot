@@ -3,8 +3,8 @@
 Этот файл может содержать функции, отвечающие за визуальное отображение и валидацию данных, тексты сообщениий должны
 лежать в файле `messages.py`.
 """
-from aiogram import types
 import aiogram.dispatcher.filters as dp_filters
+from aiogram import types
 
 import config
 import db
@@ -90,9 +90,9 @@ async def outdated_callback(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id, text='¯\\_(ツ)_/¯', show_alert=True)
 
 
-@dp.message_handler(commands=['test'])
+@dp.message_handler(is_admin=True, commands=['test'])
 async def outdated_mes(message: types.Message):
-    await bot.send_message(565656, 'fuck')
+    await message.answer('fuck')
 
 
 @dp.message_handler()
