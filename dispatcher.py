@@ -5,6 +5,7 @@
 import logging
 
 import aiogram
+from middlewares import Middle
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 import config
@@ -21,3 +22,4 @@ TOKEN = config.API_TOKEN
 bot = aiogram.Bot(token=TOKEN, parse_mode="HTML")
 storage = MemoryStorage()
 dp = aiogram.Dispatcher(bot, storage=storage)
+dp.middleware.setup(Middle())
