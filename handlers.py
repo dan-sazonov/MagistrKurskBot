@@ -125,6 +125,22 @@ async def test_state(message: types.Message):
         await message.answer('Неправильная команда. Чтобы посмотреть все варианты, вызови /admin')
 
 
+@dp.message_handler(is_admin=True, commands=['admin'])
+async def test_state(message: types.Message):
+    log.info(f'`{message.from_user.id}` asked the admin commands list')
+    await message.answer('''Это список секретных команд, которые доступны только админам канала. По мере развития бота их список будет пополнятся.
+
+/admin - покажет это сообщение
+/test - быстрая проверка работоспособности бота
+/disable - принудительная остановка бота
+/get <i>что-то</i> - выгрузит последние 5 строк отчета. Вместо <i>"что-то"</i> надо написать что-то из этого:
+    <code>main</code> - полный отчет о работе
+    <code>updates</code> - сообщения и нажатия кнопок, которые прилетели от пользователей
+    <code>warnings</code> - критические ошибки
+
+Вывод команды <code>get</code> пока что выглядит крайне ужасно, но в обозримом будущем ему будет придан более симпатичный вид.''')
+
+
 @dp.message_handler()
 async def unknown_command_mes(message: types.Message):
     await message.reply(messages.not_command)

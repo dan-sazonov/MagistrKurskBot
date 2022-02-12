@@ -52,4 +52,4 @@ def get_last_logs(file: str) -> str:
         return 'Что-то пошло не так, и этот файл исчез прямо на глазах 😐'
 
     with open(f'./logs/{file}.log', 'r') as f:
-        return '\n'.join(f.readlines()[-15:])
+        return '\n'.join(f.readlines()[-5:])
