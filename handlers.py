@@ -113,10 +113,16 @@ async def disable_bot(message: types.Message):
     await on_shutdown(None)
 
 
-@dp.message_handler(is_admin=True, commands=['get_updates'])
+@dp.message_handler(is_admin=True, commands=['get'])
 async def test_state(message: types.Message):
-    log.info(f'`{message.from_user.id}` asked the updates log')
-    await message.answer(features.get_last_logs('updates'))
+    file = message.text.split(' ')[-1]
+    log.info(f'`{message.from_user.id}` asked the {file} log')
+
+    if file in {'main', 'updates', 'warnings'}:
+        await message.answer(features.get_last_logs(file))
+    else:
+        log.info(f'Incorrect argument in /get command: {file}')
+        await message.answer('Неправильная команда. Чтобы посмотреть все варианты, вызови /admin')
 
 
 @dp.message_handler()
