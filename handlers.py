@@ -116,12 +116,7 @@ async def disable_bot(message: types.Message):
 @dp.message_handler(is_admin=True, commands=['get_updates'])
 async def test_state(message: types.Message):
     log.info(f'`{message.from_user.id}` asked the updates log')
-    if not os.path.exists('./logs/updates.log'):
-        log.warning(f"File `./logs/updates.log` wasn't found")
-        await message.answer('Что-то пошло не так, и этот файл исчез прямо на глазах😐')
-
-    with open('./logs/updates.log', 'r') as f:
-        await message.answer('\n'.join(f.readlines()[-15:]))
+    await message.answer(features.get_last_logs('updates'))
 
 
 @dp.message_handler()
