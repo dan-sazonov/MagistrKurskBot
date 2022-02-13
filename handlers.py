@@ -11,6 +11,7 @@ import config
 import db
 import features
 import logger
+import bfmv
 from dispatcher import dp, bot, storage
 from messages import Messages, Keyboards
 
@@ -19,6 +20,7 @@ log = logger.get_logger(__name__)
 messages = Messages()
 keyboards = Keyboards()
 db_main = db.Main()
+bfmv.init()
 
 
 async def on_startup(_):
