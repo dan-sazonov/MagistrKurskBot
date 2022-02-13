@@ -37,3 +37,11 @@ def get_memes() -> str:
             break
 
     return os.path.join('./memes', output)
+
+
+def get_username(link: str):
+    pass
+
+
+def find_users(name: str):
+    pass

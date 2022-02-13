@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
-
+import features
 from dispatcher import dp, bot
 
 
@@ -14,6 +14,8 @@ class Polling(StatesGroup):
     Message = State()
     Title = State()
     TitleText = State()
+    Target = State()
+
 
 @dp.message_handler(commands=['valentine'])
 async def step_0(message: types.Message):
@@ -115,5 +117,17 @@ async def step_4_2(callback_query: types.CallbackQuery, state: FSMContext):
 async def step_5(message: types.Message, state: FSMContext):
     answer = message.text
     await state.update_data(title_text=answer)
-    await message.answer('Теперь давай решим, кому ты отправишь послание. Можешь написать его настоящее имя, имя аккаунта в Телеграме или указать ссылку на его аккаунт (она должна начинаться с t.me)', reply_markup=types.ReplyKeyboardRemove())
+    await message.answer('Теперь давай решим, кому ты отправишь послание. Можешь написать его настоящее имя, имя аккаунта в Телеграме или указать ссылку на его аккаунт (она должна начинаться с t.me или @)', reply_markup=types.ReplyKeyboardRemove())
     await Polling.TitleText.set()
+
+
+@dp.message_handler(state=Polling.TitleText)
+async def step_6(message: types.Message, state: FSMContext):
+    answer = message.text
+    await state.update_data(target=answer)
+    await message.answer('Ищем подходящих людей...')
+
+    users = features.get_username(answer)
+    users = users if users else features.find_users(answer)
+
+    await Polling.Target.set()
