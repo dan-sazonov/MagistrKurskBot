@@ -3,12 +3,12 @@
 """
 
 import datetime
+from typing import Tuple
 
 import psycopg2
 
 import config
 import logger
-import features
 
 log = logger.get_logger(__name__)
 
@@ -55,10 +55,12 @@ class Main:
             log.info(f'The `{user_id}` has been added to the `messages` table')
         self.db.commit()
 
-    def add_user(self, user_id: int, username: str) -> None:
+    def add_user(self, user_id: int, username: str, tg_name: Tuple[str, str], full_name='') -> None:
         """
-        Добавляет юзера в бд, если он еще не добавлен. Указанные имена в тг подтянутся, юзернейм необходимо передать
+        Добавляет юзера в бд, если он еще не добавлен
 
+        :param tg_name: кортеж с укуазаннами именами юзера в телеге: (first_name, last_name)
+        :param full_name: полное ФИО юзера, опционально можно передать
         :param user_id: telegram id юзера
         :param username: имя юзера
         :return: None
@@ -67,7 +69,7 @@ class Main:
         if not self.cursor.fetchone():
             self.cursor.execute("INSERT INTO users(id, username, first_name, last_name, full_name, join_date, messages)"
                                 "VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                                (user_id, username, *features.get_tg_names(user_id), datetime.datetime.now(), 0))
+                                (user_id, username, *tg_name, full_name, datetime.datetime.now(), 0))
             log.info(f'The `{user_id}` has been added to the `users` table')
         self.db.commit()
         self.add_counter(user_id)

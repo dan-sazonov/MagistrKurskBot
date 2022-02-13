@@ -72,7 +72,7 @@ async def memes_mes(message: types.Message):
 async def start_mes(message: types.Message):
     await message.answer(messages.subscribe)
     await message.answer(messages.do_unsubscribe)
-    db_main.add_user(int(message.from_user.id), message.from_user.username)
+    db_main.add_user(int(message.from_user.id), message.from_user.username, tuple(message.from_user.full_name.split()))
     log.info(f'A new user has joined: {message.from_user.id}')
 
 
