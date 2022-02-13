@@ -1,6 +1,9 @@
 from aiogram.bot.bot import Bot
 import asyncio
 import os
+import psycopg2
+
+full_names = dict()
 
 ##############
 # КОНФИГ:
@@ -16,7 +19,26 @@ if not DATABASE_URL:
 ##############
 
 
-full_names = dict()
+##############
+# БД
+try:
+    db = psycopg2.connect(DATABASE_URL, sslmode='require')
+except Exception:
+    db = None
+    print('урла бд нет')
+    exit(-1)
+
+cursor = db.cursor()
+
+# создаем БД:
+cursor.execute("CREATE TABLE IF NOT EXISTS users(id BIGINT PRIMARY KEY, username TEXT, first_name TEXT, "
+               "last_name TEXT, full_name TEXT, join_date TIMESTAMP, messages INTEGER)")
+
+cursor.execute("CREATE TABLE IF NOT EXISTS messages(id BIGINT PRIMARY KEY, songs_ INTEGER, contacts_ INTEGER, "
+               "howto_ INTEGER, team_ INTEGER, memes_ INTEGER, credits_ INTEGER, help_ INTEGER, start_ INTEGER,"
+               "stop_ INTEGER, santa_ INTEGER, end_ INTEGER)")
+db.commit()
+##############
 
 
 async def get_tg_names():
