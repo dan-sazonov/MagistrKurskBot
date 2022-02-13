@@ -103,7 +103,12 @@ async def outdated_callback(callback_query: types.CallbackQuery):
 @dp.message_handler(is_admin=True, commands=['test'])
 async def test_state(message: types.Message):
     log.info(f'`{message.from_user.id}` asked the state of the bot')
-    await message.answer('🔔 Все прекрасно!')
+    await message.answer(f'''🔔 <b>Все прекрасно!</b>
+Информация о тебе:
+id: {message.from_user.id}
+юзернейм: {message.from_user.username}
+имя: {message.from_user.first_name}
+фамилия: {message.from_user.last_name}''')
 
 
 @dp.message_handler(is_admin=True, commands=['disable'])
