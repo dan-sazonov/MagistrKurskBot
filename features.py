@@ -38,7 +38,3 @@ def get_memes() -> str:
             break
 
     return os.path.join('./memes', output)
-
-
-def get_tg_names(uid: int) -> Tuple[str, str]:
-    return '',''
