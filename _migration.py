@@ -345,20 +345,25 @@ def migration():
 
     # переносим users
 
-    for i in USERS_DB:
+    # for i in USERS_DB:
+    #     try:
+    #         cursor.execute("INSERT INTO users(id, username, first_name, last_name, full_name, join_date, messages)"
+    #                        "VALUES (%s, %s, %s, %s, %s, %s, %s)", tuple(i))
+    #     except:
+    #         print(i)
+    #         exit()
+    #     db.commit()
+
+    for j in MESSAGES_DB:
         try:
-            cursor.execute("INSERT INTO users(id, username, first_name, last_name, full_name, join_date, messages)"
-                           "VALUES (%s, %s, %s, %s, %s, %s, %s)", tuple(i))
+            cursor.execute("INSERT INTO messages(id, songs_, contacts_, howto_, team_, memes_, credits_, help_,"
+                           "start_, stop_, santa_, end_, valentine_) "
+                           "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", tuple(j))
+            print('TRUE: ', j)
         except:
-            print(i)
+            print('FALSE: ', j)
             exit()
         db.commit()
-
-    # for j in MESSAGES_DB:
-    #     cursor.execute("INSERT INTO messages(id, songs_, contacts_, howto_, team_, memes_, credits_, help_,"
-    #                    "start_, stop_, santa_, end_, valentine_) "
-    #                    "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", tuple(j))
-    #     db.commit()
 
 
 migration()
