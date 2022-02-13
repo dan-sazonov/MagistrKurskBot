@@ -52,7 +52,7 @@ def set_basic_logger() -> None:
     logging.basicConfig(level=logging.INFO, filename='./logs/main.log', filemode='w+', format=_log_format)
 
 
-def get_logger(name:str) -> logging.Logger:
+def get_logger(name: str) -> logging.Logger:
     """
     Возвращает настроенный логер для дальнейшего использования в модулях
 

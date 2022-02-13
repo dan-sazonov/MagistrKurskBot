@@ -82,7 +82,7 @@ class Main:
         :param user_id: telegram id юзера
         :return: None
         """
-        for database in ['users', 'messages', 'santa']:
+        for database in ['users']:
             self.cursor.execute(f"SELECT id FROM {database} WHERE id = {user_id}")
             if self.cursor.fetchone():
                 self.cursor.execute(f"DELETE FROM {database} WHERE id = {user_id}")
