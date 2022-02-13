@@ -1,9 +1,11 @@
+import aiogram.utils.exceptions as exc
 from aiogram.bot.bot import Bot
 import asyncio
 import os
 import psycopg2
 
 full_names = dict()
+users_id = []
 
 ##############
 # КОНФИГ:
@@ -30,6 +32,11 @@ except Exception:
 
 cursor = db.cursor()
 
+# тащим все айдишники из бд:
+cursor.execute("SELECT id from users")
+for i in cursor.fetchall():
+    users_id.append(i[0])
+
 # создаем БД:
 cursor.execute("CREATE TABLE IF NOT EXISTS users(id BIGINT PRIMARY KEY, username TEXT, first_name TEXT, "
                "last_name TEXT, full_name TEXT, join_date TIMESTAMP, messages INTEGER)")
@@ -43,8 +50,12 @@ db.commit()
 
 async def get_tg_names():
     b = Bot(token=API_TOKEN)
-    for i in list({385056286, 1740178046, 1125531055, 421770409, 1070984836, 1827430974, 1038986109}):
-        p = await b.get_chat_member(chat_id=-1001761177569, user_id=i)
+    for j in users_id:
+        try:
+            p = await b.get_chat_member(chat_id=-1001761177569, user_id=j)
+        except exc.BadRequest:
+            print('fail', j)
+            continue
         full_names[p.user.id] = tuple(p.user.full_name.split())
     return
 
@@ -53,4 +64,5 @@ loop = asyncio.get_event_loop()
 loop.run_until_complete(get_tg_names())
 loop.close()
 
+print(users_id)
 print(full_names)
