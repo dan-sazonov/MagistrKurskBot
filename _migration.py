@@ -5,34 +5,34 @@ import aiogram.utils.exceptions as exc
 import psycopg2
 from aiogram.bot.bot import Bot
 
+##############
+# КОНФИГ:
+API_TOKEN = os.getenv('BOT_TOKEN')
+if not API_TOKEN:
+    print('токена нет')
+    exit(-1)
+
+DATABASE_URL = os.getenv('DATABASE_URL')
+if not DATABASE_URL:
+    print('урла бд нет')
+    exit(-1)
+##############
+
+##############
+# БД
+try:
+    db = psycopg2.connect(DATABASE_URL, sslmode='require')
+except Exception:
+    db = None
+    print('урла бд нет')
+    exit(-1)
+
+cursor = db.cursor()
+
 
 def pre_process():
     full_names = dict()
     users_id = []
-
-    ##############
-    # КОНФИГ:
-    API_TOKEN = os.getenv('BOT_TOKEN')
-    if not API_TOKEN:
-        print('токена нет')
-        exit(-1)
-
-    DATABASE_URL = os.getenv('DATABASE_URL')
-    if not DATABASE_URL:
-        print('урла бд нет')
-        exit(-1)
-    ##############
-
-    ##############
-    # БД
-    try:
-        db = psycopg2.connect(DATABASE_URL, sslmode='require')
-    except Exception:
-        db = None
-        print('урла бд нет')
-        exit(-1)
-
-    cursor = db.cursor()
 
     # тащим все айдишники из бд:
     cursor.execute("SELECT id from users")
@@ -113,3 +113,27 @@ IDS = [1306294714, 912515292, 24, 1202704228, 626301983, 418107034, 1242612463, 
        324242509, 575120780, 608316796, 1832602820, 1711263832, 920248300, 1037353382, 499606837, 175044465, 385056286,
        407274643, 424185494, 1125531055, 1070984836, 843464775, 1854799789, 913289451, 500861553, 422419401, 439481645,
        622051454, 726058532, 1399417506]
+
+
+def process():
+    # # создаем бд
+    # cursor.execute("CREATE TABLE IF NOT EXISTS users(id BIGINT PRIMARY KEY, username TEXT, first_name TEXT, "
+    #                "last_name TEXT, full_name TEXT, join_date TIMESTAMP, messages INTEGER)")
+    #
+    # cursor.execute("CREATE TABLE IF NOT EXISTS messages(id BIGINT PRIMARY KEY, songs_ INTEGER, contacts_ INTEGER, "
+    #                "howto_ INTEGER, team_ INTEGER, memes_ INTEGER, credits_ INTEGER, help_ INTEGER, start_ INTEGER,"
+    #                "stop_ INTEGER, santa_ INTEGER, end_ INTEGER)")
+    # db.commit()
+
+    users_write = []
+
+    with open('messages_backup.csv') as f:
+        for i in (f.readlines()[1:]):
+            row = i.split(',')
+            names = list(FULL_NAMES[int(row[0])]) if len(FULL_NAMES[int(row[0])]) == 2 else list(FULL_NAMES[int(row[0])]) + ['']
+            row = row[0:2] + names + row[2:-1] + [row[-1].strip('\n')]
+            print(row)
+
+process()
+
+
