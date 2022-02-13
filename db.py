@@ -8,6 +8,7 @@ import psycopg2
 
 import config
 import logger
+import features
 
 log = logger.get_logger(__name__)
 
@@ -18,6 +19,9 @@ class Main:
     """
 
     def __init__(self):
+        """
+        Проверяет коннект к бд, ловит ошибки. Создает объекты бд и курсора. Создает, если еще не созданы таблицы бд
+        """
         try:
             log.info('Trying to connect to the database')
             db = psycopg2.connect(config.DATABASE_URL, sslmode='require')
@@ -27,8 +31,9 @@ class Main:
         cursor = db.cursor()
         self.db, self.cursor = db, cursor
 
-        cursor.execute("CREATE TABLE IF NOT EXISTS users(id BIGINT PRIMARY KEY, username TEXT, join_date TIMESTAMP, "
-                       "messages INTEGER)")
+        cursor.execute("CREATE TABLE IF NOT EXISTS users(id BIGINT PRIMARY KEY, username TEXT, first_name TEXT, "
+                       "last_name TEXT, full_name TEXT, join_date TIMESTAMP, messages INTEGER)")
+
         cursor.execute("CREATE TABLE IF NOT EXISTS messages(id BIGINT PRIMARY KEY, songs_ INTEGER, contacts_ INTEGER, "
                        "howto_ INTEGER, team_ INTEGER, memes_ INTEGER, credits_ INTEGER, help_ INTEGER, start_ INTEGER,"
                        "stop_ INTEGER, santa_ INTEGER, end_ INTEGER)")
@@ -52,7 +57,7 @@ class Main:
 
     def add_user(self, user_id: int, username: str) -> None:
         """
-        Добавляет юзера в бд, если он еще не добавлен
+        Добавляет юзера в бд, если он еще не добавлен. Указанные имена в тг подтянутся, юзернейм необходимо передать
 
         :param user_id: telegram id юзера
         :param username: имя юзера
@@ -60,8 +65,9 @@ class Main:
         """
         self.cursor.execute(f"SELECT id FROM users WHERE id = {user_id}")
         if not self.cursor.fetchone():
-            self.cursor.execute("INSERT INTO users(id, username, join_date, messages) VALUES (%s, %s, %s, %s)",
-                                (user_id, username, datetime.datetime.now(), 0))
+            self.cursor.execute("INSERT INTO users(id, username, first_name, last_name, full_name, join_date, messages)"
+                                "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                                (user_id, username, *features.get_tg_names(user_id), datetime.datetime.now(), 0))
             log.info(f'The `{user_id}` has been added to the `users` table')
         self.db.commit()
         self.add_counter(user_id)

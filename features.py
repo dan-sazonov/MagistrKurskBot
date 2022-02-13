@@ -5,6 +5,7 @@
 import os
 import random
 from collections import deque
+from typing import Tuple
 
 import logger
 
@@ -37,3 +38,7 @@ def get_memes() -> str:
             break
 
     return os.path.join('./memes', output)
+
+
+def get_tg_names(uid: int) -> Tuple[str, str]:
+    return '',''
