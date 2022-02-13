@@ -13,7 +13,7 @@ class Polling(StatesGroup):
     Start = State()
     Message = State()
     Title = State()
-
+    TitleText = State()
 
 @dp.message_handler(commands=['valentine'])
 async def step_0(message: types.Message):
@@ -93,7 +93,7 @@ async def step_4_1(callback_query: types.CallbackQuery, state: FSMContext):
     await state.update_data(title=True)
 
     await bot.answer_callback_query(callback_query.id)
-    await bot.send_message(uid, '''подпись будет''')
+    await bot.send_message(uid, '''Тогда придумай себе уникальную подпись и отправь её в ответном сообщении!''')
     await Polling.Title.set()
 
 
@@ -102,6 +102,18 @@ async def step_4_2(callback_query: types.CallbackQuery, state: FSMContext):
     uid = callback_query.from_user.id
     await state.update_data(title=False)
 
+    mes_kb = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    btn_1 = types.KeyboardButton('Идем дальше!')
+    mes_kb.add(btn_1)
+
     await bot.answer_callback_query(callback_query.id)
-    await bot.send_message(uid, '''подпис не будет''')
+    await bot.send_message(uid, '''Окей, нет проблем!''', reply_markup=mes_kb)
     await Polling.Title.set()
+
+
+@dp.message_handler(state=Polling.Title)
+async def step_5(message: types.Message, state: FSMContext):
+    answer = message.text
+    await state.update_data(title_text=answer)
+    await message.answer('Теперь давай решим, кому ты отправишь послание. Можешь написать его настоящее имя, имя аккаунта в Телеграме или указать ссылку на его аккаунт (она должна начинаться с t.me)', reply_markup=types.ReplyKeyboardRemove())
+    await Polling.TitleText.set()
