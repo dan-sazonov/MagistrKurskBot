@@ -37,19 +37,3 @@ def get_memes() -> str:
             break
 
     return os.path.join('./memes', output)
-
-
-def get_last_logs(file: str) -> str:
-    """
-    Вернет последние 15 строк указанного файла логов, или сообщение об ошибке. Также все запишет в лог
-
-    :param file: название файла без расширения
-    :return: текст сообщения юзеру
-    """
-
-    if not os.path.exists(f'./logs/{file}.log'):
-        log.warning(f"File `./logs/{file}.log` wasn't found")
-        return 'Что-то пошло не так, и этот файл исчез прямо на глазах 😐'
-
-    with open(f'./logs/{file}.log', 'r') as f:
-        return '\n'.join(f.readlines()[-5:])

@@ -119,7 +119,7 @@ async def test_state(message: types.Message):
     log.info(f'`{message.from_user.id}` asked the {file} log')
 
     if file in {'main', 'updates', 'warnings'}:
-        await message.answer(features.get_last_logs(file))
+        await message.answer(logger.get_last_logs(file))
     else:
         log.info(f'Incorrect argument in /get command: {file}')
         await message.answer('Неправильная команда. Чтобы посмотреть все варианты, вызови /admin')
