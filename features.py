@@ -39,8 +39,12 @@ def get_memes() -> str:
     return os.path.join('./memes', output)
 
 
-def get_username(link: str):
-    pass
+def get_username(link: str) -> str:
+    if link.startswith('@'):
+        return link
+    if link.startswith('http') or link.startswith('t.me'):
+        return f'@{link.split("/")[-1]}'
+    return ''
 
 
 def find_users(name: str):
