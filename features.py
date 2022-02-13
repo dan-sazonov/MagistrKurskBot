@@ -6,22 +6,25 @@ import os
 import random
 from collections import deque
 
+import logger
 
-def get_memes():
-    """
-    Возвращает рандомный мемас из заранее отобранных
+log = logger.get_logger(__name__)
 
-    :return: путь к пикче
+
+def get_memes() -> str:
     """
-    memes = []
+    Возвращает путь к рандомному мемасу из заранее отобранных, или пустую строку, если мемы не найдены
+
+    :return: путь к пикче или пустая строка
+    """
     if os.path.exists('./memes'):
         memes = list(filter(lambda x: x.endswith('.jpg'), os.listdir('./memes')))
+    else:
+        log.warning("Directory with memes (expected ./memes/) wasn't found")
+        return ''
 
-    if not memes:
-        raise FileNotFoundError('./memes dir not found')
-
-    if os.path.exists('./memes/log_memes.txt'):
-        with open('./memes/log_memes.txt', 'r') as f:
+    if os.path.exists('./logs/log_memes.txt'):
+        with open('./logs/log_memes.txt', 'r') as f:
             [last_meme] = deque(f, maxlen=1) or ['']
     else:
         last_meme = 0
@@ -29,7 +32,7 @@ def get_memes():
     while True:
         output = random.choice(memes)
         if output != last_meme:
-            with open('./memes/log_memes.txt', 'w+') as f:
+            with open('./logs/log_memes.txt', 'w+') as f:
                 f.write(output)
             break
 

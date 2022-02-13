@@ -2,32 +2,23 @@
 Создает и настраивает бота
 Все, что связано с обработкой сообщений, должно быть помещено в `handlers.py`.
 """
-import logging
 
 import aiogram
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 import config
-import messages
-from filters import IsOwnerFilter, IsAdminFilter, MemberCanRestrictFilter
+import filters
+import logger
+from middlewares import Middle
 
-mes_songs = messages.Messages.Songs()
-mes_contacts = messages.Messages.Contacts()
+# логирование
+logger.set_basic_logger()
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-
-# кастомные костыльные логи
-if config.ENABLE_ECHO:
-    print('INFO: echo mode enable')
-
-# init
+# инит
 TOKEN = config.API_TOKEN
 bot = aiogram.Bot(token=TOKEN, parse_mode="HTML")
 storage = MemoryStorage()
-dp = aiogram.Dispatcher(bot, storage=storage)
 
-# activate filters
-dp.filters_factory.bind(IsOwnerFilter)
-dp.filters_factory.bind(IsAdminFilter)
-dp.filters_factory.bind(MemberCanRestrictFilter)
+dp = aiogram.Dispatcher(bot, storage=storage)
+dp.middleware.setup(Middle())
+dp.bind_filter(filters.IsAdmin)

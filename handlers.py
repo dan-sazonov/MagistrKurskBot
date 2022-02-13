@@ -4,33 +4,30 @@
 лежать в файле `messages.py`.
 """
 
+import aiogram.dispatcher.filters as dp_filters
 from aiogram import types
 
 import config
 import db
 import features
-import santa
+import logger
 from dispatcher import dp, bot, storage
-from messages import Messages
+from messages import Messages, Keyboards
+
+log = logger.get_logger(__name__)
 
 messages = Messages()
-mes_songs = Messages.Songs()
-mes_contacts = Messages.Contacts()
-mes_howto = Messages.HowTo()
-mes_team = Messages.Team()
-mes_credits = Messages.Credits()
-mes_santa = Messages.Santa()
+keyboards = Keyboards()
 db_main = db.Main()
-
-santa.init()  # костыль, не трогать
 
 
 async def on_startup(_):
-    await config.set_commands(dp)
+    log.info('Start polling')
     await bot.send_message(chat_id=config.ADMIN_CHAT, text=messages.start_polling)
 
 
 async def on_shutdown(_):
+    log.info('Stop polling')
     await bot.close()
     await storage.close()
     await bot.send_message(chat_id=config.ADMIN_CHAT, text=messages.stop_polling)
@@ -38,93 +35,116 @@ async def on_shutdown(_):
 
 @dp.message_handler(commands=['songs'])
 async def songs_mes(message: types.Message):
-    # создаем клаву
-    songs_kb = types.InlineKeyboardMarkup()
-    for key in mes_songs.mes_kb:
-        songs_kb.add(types.InlineKeyboardButton(key[0], url=key[1]))
-
-    await message.answer(mes_songs.mes_text, reply_markup=songs_kb)
-    db_main.update_counter(int(message.from_user.id), 'songs')
+    await message.answer(messages.songs, reply_markup=keyboards.get_songs_kb())
 
 
 @dp.message_handler(commands=['contacts'])
 async def contacts_mes(message: types.Message):
-    # создаем клаву
-    contacts_kb = types.InlineKeyboardMarkup()
-    for key in mes_contacts.mes_kb:
-        contacts_kb.add(types.InlineKeyboardButton(key[0], url=key[1]))
-
-    await message.answer(mes_contacts.mes_text, reply_markup=contacts_kb)
-    db_main.update_counter(int(message.from_user.id), 'contacts')
+    await message.answer(messages.contacts, reply_markup=keyboards.get_contacts_kb())
 
 
 @dp.message_handler(commands=['howto'])
 async def howto_mes(message: types.Message):
-    await message.answer(mes_howto.mes_text)
-    db_main.update_counter(int(message.from_user.id), 'howto')
+    await message.answer(messages.howto)
 
 
 @dp.message_handler(commands=['team'])
 async def team_mes(message: types.Message):
-    await message.answer(mes_team.mes_text)
-    db_main.update_counter(int(message.from_user.id), 'team')
+    await message.answer(messages.team)
 
 
 @dp.message_handler(commands=['memes'])
 async def memes_mes(message: types.Message):
-    await message.answer_photo(types.InputFile(features.get_memes()))
-    db_main.update_counter(int(message.from_user.id), 'memes')
+    out = features.get_memes()
+    if out:
+        await message.answer_photo(types.InputFile(out))
+    else:
+        await message.answer('Мемов нет(')
 
 
 @dp.message_handler(commands=['credits'])
 async def memes_mes(message: types.Message):
-    await message.answer(mes_credits.mes_text, disable_web_page_preview=True)
-    db_main.update_counter(int(message.from_user.id), 'credits')
+    await message.answer(messages.credit, disable_web_page_preview=True)
 
 
-@dp.message_handler(commands=['subscribe', 'start'])
+@dp.message_handler(dp_filters.CommandStart())
 async def start_mes(message: types.Message):
     await message.answer(messages.subscribe)
     await message.answer(messages.do_unsubscribe)
-    db_main.add_user(int(message.from_user.id), message.from_user.username)
-    db_main.update_counter(int(message.from_user.id), 'start')
+    db_main.add_user(int(message.from_user.id), message.from_user.username, tuple(message.from_user.full_name.split()))
+    log.info(f'A new user has joined: {message.from_user.id}')
 
 
 @dp.message_handler(commands=['unsubscribe', 'stop'])
 async def stop_mes(message: types.Message):
-    db_main.update_counter(int(message.from_user.id), 'stop')
-    db_main.del_user(int(message.from_user.id))
+    log.info(f'The user has left the bot: {message.from_user.id}')
     await message.answer(messages.unsubscribe)
     await message.answer(messages.do_subscribe)
+    db_main.del_user(int(message.from_user.id))
 
 
-@dp.message_handler(commands=['help', '!', '?'])
+@dp.message_handler(dp_filters.CommandHelp())
 async def help_mes(message: types.Message):
     await message.answer(messages.help, disable_web_page_preview=True)
-    db_main.update_counter(int(message.from_user.id), 'help')
 
 
-@dp.message_handler(commands=['santa'])
-async def howto_mes(message: types.Message):
-    await message.answer(mes_santa.placeholder)
+@dp.message_handler(commands=['santa', 'end'])
+async def outdated_mes(message: types.Message):
+    await message.answer(messages.placeholder)
 
 
-@dp.message_handler(commands=['end'])
-async def howto_mes(message: types.Message):
-    await message.answer(mes_santa.placeholder)
+@dp.callback_query_handler(lambda c: c.data in {'not_rcd', 'start_pol', 'received_btn', 'sent_btn'})
+async def outdated_callback(callback_query: types.CallbackQuery):
+    await bot.answer_callback_query(callback_query.id, text='¯\\_(ツ)_/¯', show_alert=True)
+    log.info(f'The user clicked on an outdated button: {callback_query.id}')
+
+
+@dp.message_handler(is_admin=True, commands=['test'])
+async def test_state(message: types.Message):
+    log.info(f'`{message.from_user.id}` asked the state of the bot')
+    await message.answer(f'''🔔 <b>Все прекрасно!</b>
+Информация о тебе:
+id: {message.from_user.id}
+юзернейм: {message.from_user.username}
+имя: {message.from_user.first_name}
+фамилия: {message.from_user.last_name}''')
+
+
+@dp.message_handler(is_admin=True, commands=['disable'])
+async def disable_bot(message: types.Message):
+    log.info(f'`{message.from_user.id}` stopped the bot')
+    await message.answer('🔔 Бот будет остановлен')
+    await on_shutdown(None)
+
+
+@dp.message_handler(is_admin=True, commands=['get'])
+async def test_state(message: types.Message):
+    file = message.text.split(' ')[-1]
+    log.info(f'`{message.from_user.id}` asked the {file} log')
+
+    if file in {'main', 'updates', 'warnings'}:
+        await message.answer(logger.get_last_logs(file))
+    else:
+        log.info(f'Incorrect argument in /get command: {file}')
+        await message.answer('Неправильная команда. Чтобы посмотреть все варианты, вызови /admin')
+
+
+@dp.message_handler(is_admin=True, commands=['admin'])
+async def test_state(message: types.Message):
+    log.info(f'`{message.from_user.id}` asked the admin commands list')
+    await message.answer('''Это список секретных команд, которые доступны только админам канала. По мере развития бота их список будет пополнятся.
+
+/admin - покажет это сообщение
+/test - быстрая проверка работоспособности бота
+/disable - принудительная остановка бота
+/get <i>что-то</i> - выгрузит последние 5 строк отчета. Вместо <i>"что-то"</i> надо написать что-то из этого:
+    <code>main</code> - полный отчет о работе
+    <code>updates</code> - сообщения и нажатия кнопок, которые прилетели от пользователей
+    <code>warnings</code> - критические ошибки
+
+Вывод команды <code>get</code> пока что выглядит крайне ужасно, но в обозримом будущем ему будет придан более симпатичный вид.''')
 
 
 @dp.message_handler()
 async def unknown_command_mes(message: types.Message):
-    """
-    Пересылаем все сообщения и айдишник юзеру, чисто для тестов
-    Если эхо выключено, шлем сообщение, что команда не понятна
-
-    :param message: Параметры сообщения, которое прилетело от юзера
-    :return: None
-    """
-    if config.ENABLE_ECHO:
-        await message.reply(message.text)
-        await message.answer(f'usr id: {message.from_user.id}')
-    else:
-        await message.reply(messages.not_command)
+    await message.reply(messages.not_command)
