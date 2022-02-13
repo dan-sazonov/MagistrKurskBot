@@ -178,22 +178,21 @@ def find_users(name: str):
                      1399417506: 'kira_0014', 385056286: 'dan_sazonov'}
 
     key = ' '.join(key)
-    print(key)
 
     ans = dict()
-    for i in translit(key, language_code='ru', reversed=True).split(' '):
-        for j in tg_names:
-            try:
-                if fuzz.partial_ratio(j, i) >= 70:
-                    ans[tg_names[j]] = j
-            except:
-                continue
-        for j in usernames:
-            try:
-                if fuzz.partial_ratio(j, i) >= 70:
-                    ans[usernames[j]] = j
-            except:
-                continue
+    i = translit(key, language_code='ru', reversed=True)
+    for j in tg_names:
+        try:
+            if fuzz.partial_ratio(j, i) >= 70:
+                ans[tg_names[j]] = j
+        except:
+            continue
+    for j in usernames:
+        try:
+            if fuzz.partial_ratio(j, i) >= 70:
+                ans[usernames[j]] = j
+        except:
+            continue
     for i in tg_names:
         try:
             if fuzz.partial_ratio(i, key) >= 70:
@@ -208,4 +207,4 @@ def find_users(name: str):
         tmp = '' if i not in usernames_inv else usernames_inv[i]
         out.append((i, tmp, ans[i]))
     out.sort(key=lambda x: len(x[-1]), reverse=True)
-    print(out)
+    return out
