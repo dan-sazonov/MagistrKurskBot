@@ -36,7 +36,7 @@ class Main:
 
         cursor.execute("CREATE TABLE IF NOT EXISTS messages(id BIGINT PRIMARY KEY, songs_ INTEGER, contacts_ INTEGER, "
                        "howto_ INTEGER, team_ INTEGER, memes_ INTEGER, credits_ INTEGER, help_ INTEGER, start_ INTEGER,"
-                       "stop_ INTEGER, santa_ INTEGER, end_ INTEGER)")
+                       "stop_ INTEGER, santa_ INTEGER, end_ INTEGER, valentine_ INTEGER)")
         db.commit()
         log.info('Successful connection to the database')
 
@@ -50,8 +50,9 @@ class Main:
         self.cursor.execute(f"SELECT id FROM messages WHERE id = {user_id}")
         if not self.cursor.fetchone():
             self.cursor.execute("INSERT INTO messages(id, songs_, contacts_, howto_, team_, memes_, credits_, help_,"
-                                "start_, stop_, santa_, end_) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                                (user_id, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+                                "start_, stop_, santa_, end_, valentine_) "
+                                "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                                (user_id, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
             log.info(f'The `{user_id}` has been added to the `messages` table')
         self.db.commit()
 
