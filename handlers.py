@@ -3,7 +3,6 @@
 Этот файл может содержать функции, отвечающие за визуальное отображение и валидацию данных, тексты сообщениий должны
 лежать в файле `messages.py`.
 """
-import os
 
 import aiogram.dispatcher.filters as dp_filters
 from aiogram import types

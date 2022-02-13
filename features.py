@@ -5,7 +5,6 @@
 import os
 import random
 from collections import deque
-from typing import Tuple
 
 import logger
 

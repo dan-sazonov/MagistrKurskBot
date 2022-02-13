@@ -2,13 +2,13 @@
 Создает и настраивает бота
 Все, что связано с обработкой сообщений, должно быть помещено в `handlers.py`.
 """
-import logger
 
 import aiogram
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 import config
 import filters
+import logger
 from middlewares import Middle
 
 # логирование
