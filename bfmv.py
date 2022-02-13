@@ -117,7 +117,7 @@ async def step_4_2(callback_query: types.CallbackQuery, state: FSMContext):
 async def step_5(message: types.Message, state: FSMContext):
     answer = message.text
     await state.update_data(title_text=answer)
-    await message.answer('Теперь давай решим, кому ты отправишь послание. Можешь написать его настоящее имя, имя аккаунта в Телеграме или указать ссылку на его аккаунт (она должна начинаться с t.me или @)', reply_markup=types.ReplyKeyboardRemove())
+    await message.answer('Теперь давай решим, кому ты отправишь послание. Можешь написать его настоящее имя (желательно с фамилией), имя аккаунта в Телеграме или указать ссылку на его аккаунт (она должна начинаться с t.me или @)', reply_markup=types.ReplyKeyboardRemove())
     await Polling.TitleText.set()
 
 
