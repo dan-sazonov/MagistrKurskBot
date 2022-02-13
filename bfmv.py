@@ -12,6 +12,7 @@ def init():
 class Polling(StatesGroup):
     Start = State()
     Message = State()
+    Title = State()
 
 
 @dp.message_handler(commands=['valentine'])
@@ -63,9 +64,44 @@ async def step_2_2(callback_query: types.CallbackQuery, state: FSMContext):
 @dp.message_handler(state=Polling.Start, content_types='sticker')
 async def step_3_1(message: types.Message, state: FSMContext):
     answer = message.sticker.file_id
-    await state.update_data(sticker=answer)
-    await state.update_data(text=None)
+    await state.update_data(message=answer)
 
-    await message.answer(answer)
-    await message.answer_sticker(rf'{answer}')
+    btn_1 = types.InlineKeyboardButton('Да!', callback_data='title_true')
+    btn_2 = types.InlineKeyboardButton('Нет', callback_data='title_false')
+    kb = types.InlineKeyboardMarkup().add(btn_1).add(btn_2)
+
+    await message.answer('Хочешь подписать свою валентинку?', reply_markup=kb)
     await Polling.Message.set()
+
+
+@dp.message_handler(state=Polling.Start, content_types='text')
+async def step_3_2(message: types.Message, state: FSMContext):
+    answer = message.text
+    await state.update_data(message=answer)
+
+    btn_1 = types.InlineKeyboardButton('Да!', callback_data='title_true')
+    btn_2 = types.InlineKeyboardButton('Нет', callback_data='title_false')
+    kb = types.InlineKeyboardMarkup().add(btn_1).add(btn_2)
+
+    await message.answer('Хочешь подписать своё письмо?', reply_markup=kb)
+    await Polling.Message.set()
+
+
+@dp.callback_query_handler(lambda c: c.data == 'title_true', state=Polling.Message)
+async def step_4_1(callback_query: types.CallbackQuery, state: FSMContext):
+    uid = callback_query.from_user.id
+    await state.update_data(title=True)
+
+    await bot.answer_callback_query(callback_query.id)
+    await bot.send_message(uid, '''подпись будет''')
+    await Polling.Title.set()
+
+
+@dp.callback_query_handler(lambda c: c.data == 'title_false', state=Polling.Message)
+async def step_4_2(callback_query: types.CallbackQuery, state: FSMContext):
+    uid = callback_query.from_user.id
+    await state.update_data(title=False)
+
+    await bot.answer_callback_query(callback_query.id)
+    await bot.send_message(uid, '''подпис не будет''')
+    await Polling.Title.set()
