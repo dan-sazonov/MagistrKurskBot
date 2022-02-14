@@ -60,7 +60,7 @@ async def step_2_2(callback_query: types.CallbackQuery, state: FSMContext):
     await state.update_data(uid=uid)
 
     await bot.answer_callback_query(callback_query.id)
-    await bot.send_message(uid, '''Здорово! Отправь сюда стикер, который ты хочешь сделать валентинкой''')
+    await bot.send_message(uid, '''Здорово! Отправь сюда стикер, который ты хочешь сделать валентинкой. Ты можешь выбрать его из <a href="t.me/addstickers/love_you_tg_by_fStikBot">стикерпака</a>, собранного нашей командой.''', disable_web_page_preview=True)
     await Polling.Start.set()
 
 
