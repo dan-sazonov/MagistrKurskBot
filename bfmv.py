@@ -164,3 +164,12 @@ async def step_7(message: types.Message, state: FSMContext):
     
 Нажми кнопку "🚧", чтобы внести изменения''', reply_markup=kb)
     await state.finish()
+
+
+@dp.callback_query_handler(lambda c: c.data == 'abort')
+async def step_8(callback_query: types.CallbackQuery):
+    uid = callback_query.from_user.id
+    await bot.answer_callback_query(callback_query.id)
+    await bot.send_message(uid, '''Что-то пошло не так, данные не получается отредактировать😐
+
+Отправь команду /valentine снова, это точно сработает!''')
