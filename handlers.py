@@ -98,7 +98,9 @@ async def step_0(message: types.Message):
     await message.answer(messages.placeholder_valentine)
 
 
-@dp.callback_query_handler(lambda c: c.data in {'not_rcd', 'start_pol', 'received_btn', 'sent_btn'})
+@dp.callback_query_handler(
+    lambda c: c.data in {'not_rcd', 'start_pol', 'received_btn', 'sent_btn', 'start_btn', 'letter', 'sticker',
+                         'title_true', 'title_false', 'send', 'abort'})
 async def outdated_callback(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id, text='¯\\_(ツ)_/¯', show_alert=True)
     log.info(f'The user clicked on an outdated button: {callback_query.id}')
