@@ -20,5 +20,5 @@ bot = aiogram.Bot(token=TOKEN, parse_mode="HTML")
 storage = MemoryStorage()
 
 dp = aiogram.Dispatcher(bot, storage=storage)
-# dp.middleware.setup(Middle())
+dp.middleware.setup(Middle())
 dp.bind_filter(filters.IsAdmin)
