@@ -128,7 +128,7 @@ async def step_6(message: types.Message, state: FSMContext):
     await message.answer('Ищем подходящих людей...')
 
     if answer.isdigit():
-        send_to = int(answer)
+        send_to = [int(answer)]
         await state.update_data(send_to=send_to)
         await message.answer(f'''Вот кого нам удалось найти. Выбери цифру, которая соответствует нужному тебе человеку, и отправь её в ответ:
 
@@ -141,3 +141,26 @@ async def step_6(message: types.Message, state: FSMContext):
             tmp.append(f'<b>{i+1}.</b> {"@"+out[i][1] if out[i][1] else ""} <i>({out[i][2].title() if out[i][2] else ""})</i>')
         await message.answer('Вот кого нам удалось найти. Выбери цифру, которая соответствует нужному тебе человеку, и отправь её в ответ:\n\n' + '\n'.join(tmp))
     await Polling.Target.set()
+
+
+@dp.message_handler(state=Polling.Target)
+async def step_7(message: types.Message, state: FSMContext):
+    i = int(message.text) - 1
+    data = await state.get_data()
+    print(data)
+    out = data.get('send_to')
+    pre = f'''<b>А теперь давай проверим.</b>
+
+Получатель: {"@"+out[i][1] if out[i][1] else ""} <i>({out[i][2].title() if out[i][2] else ""})</i>
+{'Стикер' if data.get('type')=='sticker' else 'Текст сообщения'}: <i>{'см. выше' if data.get('type')=='sticker' else data.get('message')}</i>
+Подпись: <i>{'нет' if not data.get('title') else data.get('title_text')}</i>'''
+
+    await message.answer(pre)
+    btn_1 = types.InlineKeyboardButton('🚀', callback_data='send')
+    btn_2 = types.InlineKeyboardButton('🚧', callback_data='abort')
+    kb = types.InlineKeyboardMarkup().add(btn_1).add(btn_2)
+
+    await message.answer('''Нажми кнопку "🚀", чтобы отправить сообщение
+    
+Нажми кнопку "🚧", чтобы внести изменения''', reply_markup=kb)
+    await state.finish()
