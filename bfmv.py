@@ -2,7 +2,10 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 import features
+import logger
 from dispatcher import dp, bot
+
+log = logger.get_logger(__name__)
 
 
 def init():
@@ -27,6 +30,7 @@ async def step_0(message: types.Message):
 Здесь ты можешь отправить письмо или валентинку любому человеку, ведь сегодня – День святого Валентина – нужно делиться своими чувствами в такие непростые времена 💖
 
 Нажми кнопку "❤", чтобы начать''', reply_markup=kb)
+    log.info(f'{message.from_user.id} start the valentine')
 
 
 @dp.callback_query_handler(lambda c: c.data == 'start_btn')
@@ -161,6 +165,7 @@ async def step_7(message: types.Message, state: FSMContext):
     i = int(message.text) - 1
     if i == -1:
         await state.finish()
+        log.info(f'{message.from_user.id} stop the poll after name search')
         return
 
     data = await state.get_data()
@@ -199,6 +204,7 @@ async def step_8(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.send_message(uid, '''Что-то пошло не так, данные не получается отредактировать😐
 
 Отправь команду /valentine снова, это точно сработает!''')
+    log.info(f'{uid} stop the poll after date checking')
     await state.finish()
 
 
@@ -212,6 +218,7 @@ async def step_8(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
 
     try:
+        log.info(f'Send data from {uid} ot {send_to}')
         if data.get('type') == 'letter':
             await bot.send_message(send_to, f'''<b>Привет! Это бот канала "КРОМО "Магистр".</b>
 
@@ -247,7 +254,9 @@ async def step_8(callback_query: types.CallbackQuery, state: FSMContext):
                 await bot.send_message(send_to, f'''Отправитель не захотел разглашать тебе своего имени. Но ты можешь сам догадаться, кто это мог быть, и написать этому человеку лично, чтобы поблагодарить его и пожелать всего самого сокровенного!''')
         await bot.send_message(uid, 'Отлично! Тайный Валентин уже отправил твоё послание :)')
     except:
+        log.warn('Fail to send')
         await bot.send_message(uid, '''О нет, какая жалость! Получатель твоего прекрасного послания, к сожалению, запретил ботам писать ему сообщения. Из-за этого Тайный Валентин не может передать ему то, что ты отправил.
 
 Не расстраивайся! Ты можешь сказать эти слова тому человеку сам. Ему (или ей) точно будет приятно!''')
+
     await state.finish()
