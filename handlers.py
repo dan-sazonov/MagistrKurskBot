@@ -7,7 +7,6 @@
 import aiogram.dispatcher.filters as dp_filters
 from aiogram import types
 
-import bfmv
 import config
 import db
 import features
@@ -20,7 +19,6 @@ log = logger.get_logger(__name__)
 messages = Messages()
 keyboards = Keyboards()
 db_main = db.Main()
-bfmv.init()
 
 
 async def on_startup(_):
@@ -97,7 +95,7 @@ async def outdated_mes(message: types.Message):
 
 @dp.message_handler(commands=['valentine'])
 async def step_0(message: types.Message):
-    await message.answer(messages.placeholder_santa)
+    await message.answer(messages.placeholder_valentine)
 
 
 @dp.callback_query_handler(lambda c: c.data in {'not_rcd', 'start_pol', 'received_btn', 'sent_btn'})
