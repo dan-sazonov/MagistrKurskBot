@@ -150,7 +150,8 @@ async def step_6(message: types.Message, state: FSMContext):
         await message.answer('''<b>Вот кого нам удалось найти.</b>
 
 Выбери цифру, которая соответствует нужному тебе человеку, и отправь её в ответ.
-Если нужного человека здесь нет, отправь 0 и попробуй снова.''' + '\n'.join(tmp))
+Если нужного человека здесь нет, отправь 0 и попробуй снова.
+''' + '\n'.join(tmp))
     await Polling.Target.set()
 
 
@@ -167,7 +168,7 @@ async def step_7(message: types.Message, state: FSMContext):
     if len(out) > 1:
         await state.update_data(slave_id=out[i][0])
         pre = f'''<b>А теперь давай проверим.</b>
-{out}
+
 Получатель: {"@"+out[i][1] if out[i][1] else ""} <i>({out[i][2].title() if out[i][2] else ""})</i>
 {'Стикер' if data.get('type')=='sticker' else 'Текст сообщения'}: <i>{'см. выше' if data.get('type')=='sticker' else data.get('message')}</i>
 Подпись: <i>{'нет' if not data.get('title') else data.get('title_text')}</i>'''
