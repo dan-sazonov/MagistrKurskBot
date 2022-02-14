@@ -8,7 +8,6 @@ from collections import deque
 
 from fuzzywuzzy import fuzz
 from transliterate import translit
-
 import logger
 
 log = logger.get_logger(__name__)
@@ -44,13 +43,14 @@ def get_memes() -> str:
 
 def get_username(link: str) -> str:
     if link.startswith('@'):
-        return link
+        return link.lstrip('@')
     if link.startswith('http') or link.startswith('t.me'):
-        return f'@{link.split("/")[-1]}'
-    return ''
+        return f'{link.split("/")[-1]}'
+    return link
 
 
 def find_users(name: str):
+    name = get_username(name)
     short_names = {'саша': 'александра', 'лёша': 'алексей', 'алик': 'альберт', 'толя': 'анатолий', 'андрей': 'андрей',
                    'антон': 'антон', 'аркаша': 'аркадий', 'сеня': 'арсений', 'тёма': 'артём', 'артур': 'артур',
                    'богдан': 'богдан', 'боря': 'борис', 'вадик': 'вадим', 'валя': 'валентина', 'валера': 'валерий',

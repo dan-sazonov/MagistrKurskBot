@@ -127,7 +127,17 @@ async def step_6(message: types.Message, state: FSMContext):
     await state.update_data(target=answer)
     await message.answer('Ищем подходящих людей...')
 
-    users = features.get_username(answer)
-    users = users if users else features.find_users(answer)
+    if answer.isdigit():
+        send_to = int(answer)
+        await state.update_data(send_to=send_to)
+        await message.answer(f'''Вот кого нам удалось найти. Выбери цифру, которая соответствует нужному тебе человеку, и отправь её в ответ:
 
+<b>1.</b> {send_to}''')
+    else:
+        tmp = []
+        out = features.find_users(answer)
+        await state.update_data(send_to=out)
+        for i in range(len(out)):
+            tmp.append(f'<b>{i+1}.</b> {"@"+out[i][1] if out[i][1] else ""} <i>({out[i][2].title() if out[i][2] else ""})</i>')
+        await message.answer('Вот кого нам удалось найти. Выбери цифру, которая соответствует нужному тебе человеку, и отправь её в ответ:\n\n' + '\n'.join(tmp))
     await Polling.Target.set()
