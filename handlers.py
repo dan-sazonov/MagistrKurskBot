@@ -11,7 +11,6 @@ import config
 import db
 import features
 import logger
-import bfmv
 from dispatcher import dp, bot, storage
 from messages import Messages, Keyboards
 
@@ -20,7 +19,6 @@ log = logger.get_logger(__name__)
 messages = Messages()
 keyboards = Keyboards()
 db_main = db.Main()
-bfmv.init()
 
 
 async def on_startup(_):
@@ -92,10 +90,17 @@ async def help_mes(message: types.Message):
 
 @dp.message_handler(commands=['santa', 'end'])
 async def outdated_mes(message: types.Message):
-    await message.answer(messages.placeholder)
+    await message.answer(messages.placeholder_santa)
 
 
-@dp.callback_query_handler(lambda c: c.data in {'not_rcd', 'start_pol', 'received_btn', 'sent_btn'})
+@dp.message_handler(commands=['valentine'])
+async def step_0(message: types.Message):
+    await message.answer(messages.placeholder_valentine)
+
+
+@dp.callback_query_handler(
+    lambda c: c.data in {'not_rcd', 'start_pol', 'received_btn', 'sent_btn', 'start_btn', 'letter', 'sticker',
+                         'title_true', 'title_false', 'send', 'abort'})
 async def outdated_callback(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id, text='¯\\_(ツ)_/¯', show_alert=True)
     log.info(f'The user clicked on an outdated button: {callback_query.id}')
