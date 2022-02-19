@@ -3,6 +3,7 @@
 """
 
 import datetime
+import random
 from typing import Tuple
 
 import psycopg2
@@ -30,6 +31,7 @@ class Main:
             return
         cursor = db.cursor()
         self.db, self.cursor = db, cursor
+        self.last_meme = -1
 
         cursor.execute("CREATE TABLE IF NOT EXISTS users(id BIGINT PRIMARY KEY, username TEXT, first_name TEXT, "
                        "last_name TEXT, full_name TEXT, join_date TIMESTAMP, messages INTEGER)")
@@ -108,3 +110,18 @@ class Main:
         self.cursor.execute(f"UPDATE users SET messages = messages + {count} WHERE id = {user_id}")
         log.info(f'The value of users.messages has been increased for `{user_id}` by {count}')
         self.db.commit()
+
+    def get_random_meme(self):
+        while True:
+            meme_id = random.randint(0, 12)
+            if meme_id != self.last_meme:
+                self.last_meme = meme_id
+                break
+
+        self.cursor.execute(f"SELECT file_id FROM memes WHERE id = {meme_id}")
+        meme_hash = self.cursor.fetchone()
+
+        if not meme_hash:
+            log.warning(f'Fail to get meme by id {meme_id}')
+            return ''
+        return meme_hash[0]

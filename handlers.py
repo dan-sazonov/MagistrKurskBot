@@ -9,7 +9,6 @@ from aiogram import types
 
 import config
 import db
-import features
 import logger
 from dispatcher import dp, bot, storage
 from messages import Messages, Keyboards
@@ -55,9 +54,9 @@ async def team_mes(message: types.Message):
 
 @dp.message_handler(commands=['memes'])
 async def memes_mes(message: types.Message):
-    out = features.get_memes()
+    out = db_main.get_random_meme()
     if out:
-        await message.answer_photo(types.InputFile(out))
+        await message.answer_photo(out)
     else:
         await message.answer('Мемов нет(')
 
