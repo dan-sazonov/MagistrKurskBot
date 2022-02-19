@@ -113,7 +113,7 @@ class Main:
 
     def get_random_meme(self) -> str:
         """
-        Возвращает file id рандомного мема из бд, или пустую строку, если что-то пошло не так
+        Возвращает file id рандомного мема из бд или пустую строку, если что-то пошло не так; увеличивает счетчик
 
         :return: рандомный ile_id
         """
@@ -129,4 +129,7 @@ class Main:
         if not meme_hash:
             log.warning(f'Fail to get meme by id {meme_id}')
             return ''
+
+        self.cursor.execute(f"UPDATE memes SET asks_count = asks_count + 1 WHERE id = {meme_id}")
+        self.db.commit()
         return meme_hash[0]
