@@ -149,5 +149,4 @@ dmypy.json
 cython_debug/
 
 ### logs and configs
-memes/log_memes.txt
 logs/
