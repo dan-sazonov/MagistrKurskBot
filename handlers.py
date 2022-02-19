@@ -9,7 +9,6 @@ from aiogram import types
 
 import config
 import db
-import features
 import logger
 from dispatcher import dp, bot, storage
 from messages import Messages, Keyboards
@@ -55,9 +54,9 @@ async def team_mes(message: types.Message):
 
 @dp.message_handler(commands=['memes'])
 async def memes_mes(message: types.Message):
-    out = features.get_memes()
+    out = db_main.get_random_meme()
     if out:
-        await message.answer_photo(types.InputFile(out))
+        await message.answer_photo(out)
     else:
         await message.answer('Мемов нет(')
 
@@ -122,6 +121,14 @@ async def disable_bot(message: types.Message):
     log.info(f'`{message.from_user.id}` stopped the bot')
     await message.answer('🔔 Бот будет остановлен')
     await on_shutdown(None)
+
+
+@dp.message_handler(content_types=['photo'])
+async def scan_message(msg: types.Message):
+    document_id = msg.photo[0].file_id
+    file_info = await bot.get_file(document_id)
+    await msg.reply(f'''file_id: {file_info.file_id}
+file_path: {file_info.file_path}''')
 
 
 @dp.message_handler(is_admin=True, commands=['get'])

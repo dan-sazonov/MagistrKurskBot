@@ -1,7 +1,8 @@
 import logging
 import os
 
-_log_format = '%(asctime)s [%(levelname)s] - %(name)s(%(filename)s, %(lineno)d): %(message)s'
+_log_format_std = '[%(levelname)s] - %(name)s(%(filename)s, %(lineno)d): %(message)s'
+_log_format_file = '%(asctime)s [%(levelname)s] - %(name)s(%(filename)s, %(lineno)d): %(message)s'
 
 
 def _safe_mkfile(path: str) -> None:
@@ -26,7 +27,7 @@ def _get_file_handler() -> logging.FileHandler:
     _safe_mkfile('warnings.log')
     file_handler = logging.FileHandler('./logs/warnings.log')
     file_handler.setLevel(logging.WARNING)
-    file_handler.setFormatter(logging.Formatter(_log_format))
+    file_handler.setFormatter(logging.Formatter(_log_format_file))
     return file_handler
 
 
@@ -38,7 +39,7 @@ def _get_stream_handler() -> logging.StreamHandler:
     """
     stream_handler = logging.StreamHandler()
     stream_handler.setLevel(logging.INFO)
-    stream_handler.setFormatter(logging.Formatter(_log_format))
+    stream_handler.setFormatter(logging.Formatter(_log_format_std))
     return stream_handler
 
 
@@ -49,7 +50,7 @@ def set_basic_logger() -> None:
     :return: None
     """
     _safe_mkfile('main.log')
-    logging.basicConfig(level=logging.INFO, filename='./logs/main.log', filemode='w+', format=_log_format)
+    logging.basicConfig(level=logging.INFO, filename='./logs/main.log', filemode='w+', format=_log_format_file)
 
 
 def get_logger(name: str) -> logging.Logger:
