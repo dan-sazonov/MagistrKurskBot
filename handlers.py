@@ -124,6 +124,14 @@ async def disable_bot(message: types.Message):
     await on_shutdown(None)
 
 
+@dp.message_handler(content_types=['photo'])
+async def scan_message(msg: types.Message):
+    document_id = msg.photo[0].file_id
+    file_info = await bot.get_file(document_id)
+    await msg.reply(f'''file_id: {file_info.file_id}
+file_path: {file_info.file_path}''')
+
+
 @dp.message_handler(is_admin=True, commands=['get'])
 async def test_state(message: types.Message):
     file = message.text.split(' ')[-1]
