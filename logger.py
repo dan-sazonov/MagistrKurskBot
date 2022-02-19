@@ -1,7 +1,7 @@
 import logging
 import os
 
-_log_format = '%(asctime)s [%(levelname)s] - %(name)s(%(filename)s, %(lineno)d): %(message)s'
+_log_format = '[%(levelname)s] - %(name)s(%(filename)s, %(lineno)d): %(message)s'
 
 
 def _safe_mkfile(path: str) -> None:
