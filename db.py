@@ -111,7 +111,12 @@ class Main:
         log.info(f'The value of users.messages has been increased for `{user_id}` by {count}')
         self.db.commit()
 
-    def get_random_meme(self):
+    def get_random_meme(self) -> str:
+        """
+        Возвращает file id рандомного мема из бд, или пустую строку, если что-то пошло не так
+
+        :return: рандомный ile_id
+        """
         while True:
             meme_id = random.randint(0, 12)
             if meme_id != self.last_meme:
