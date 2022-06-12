@@ -15,7 +15,6 @@
 - [ ] Создать чат канала, прикрутить спам-фильтр к нему
 - [ ] Обсудить новый функционал бота, возможности развития
 - [ ] Сделать новые стикеры
-<br>
 
 ## 🛠 Стэк
 - Python3 + aiogram
@@ -28,7 +27,6 @@
 ## 🎯 Совместимость
 Версии `v2.` разарбатываются под версию интерпретатора Python `3.8.2`, также гарантируется совместимость с версией `3.9.0`.<br>
 **ОС:** _Ubuntu Server 18.04 x64_, также протестирован на _Windows 10 Pro x64_
- 
 
 ## 🤝 Хотите сотрудничать?
 Если вы обнаружили ошибку в коде, или знаете более оптимальное решение, откройте
@@ -38,7 +36,7 @@
 ## 👨‍💻 Автор
 Автор репозитория и кода - [@dan-sazonov](https://github.com/dan-sazonov). <br>
 **Связаться со мной:**<br>
-- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/768px-Telegram_logo.svg.png" width=16 height=16> Telegram (preferred):<a href="https://t.me/dan_sazonov"> @dan_sazonov</a>  
+- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/768px-Telegram_logo.svg.png" width=16 height=16> Telegram:<a href="https://t.me/dan_sazonov"> @dan_sazonov</a>  
 - <img src="https://upload.wikimedia.org/wikipedia/commons/2/21/VK.com-logo.svg" width=16 height=16> VK:<a href="https://vk.com/dan_sazonov"> @dan_sazonov</a> 
 - 📩 E-mail: [`dan_sazonov@vk.com`](mailto:/dan_sazonov@vk.com)
 
