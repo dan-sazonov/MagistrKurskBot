@@ -1,5 +1,5 @@
 # MagistrKurskBot
-[![GitHub](https://img.shields.io/github/license/dan-sazonov/MagistrKurskBot)](https://github.com/dan-sazonov/MagistrKurskBot/blob/master/legal_info/LICENSE.md)&nbsp;&nbsp;
+[![GitHub](https://img.shields.io/github/license/dan-sazonov/MagistrKurskBot)](https://github.com/dan-sazonov/MagistrKurskBot/blob/master/LICENSE.md)&nbsp;&nbsp;
 ![OpenSource](https://img.shields.io/badge/Open%20Source-%E2%99%A5-red)<br>
 
 **Чат-бот для телеграм-канала [КРОМО "Магистр"](https://t.me/magistrKursk).**
@@ -17,13 +17,18 @@
 - [ ] Сделать новые стикеры
 <br>
 
-## Стэк
+## 🛠 Стэк
 - Python3 + aiogram
 - **БД:** PostgreSQL
 - **Облако:** Heroku
 
 Разработка идет на ветке `master`. На ветке `prod-v1` последний стабильный релиз v1.x.x. Разработка данной версии прекращена, актуальные релизы сливаются в `prod-v2`.  
 Перед запуском на локалке необходимо поставить пакеты из `requirements.txt` и создать переменные окружения `BOT_TOKEN` и `DATABASE_URL` со значением токена бота и URI бд соответственно.
+
+## 🎯 Совместимость
+Версии `v2.` разарбатываются под версию интерпретатора Python `3.8.2`, также гарантируется совместимость с версией `3.9.0`.<br>
+**ОС:** _Ubuntu Server 18.04 x64_, также протестирован на _Windows 10 Pro x64_
+ 
 
 ## 🤝 Хотите сотрудничать?
 Если вы обнаружили ошибку в коде, или знаете более оптимальное решение, откройте
@@ -33,9 +38,10 @@
 ## 👨‍💻 Автор
 Автор репозитория и кода - [@dan-sazonov](https://github.com/dan-sazonov). <br>
 **Связаться со мной:**<br>
-[:airplane: Telegram](https://t.me/dan_sazonov) <br>
-[:e-mail: Email](mailto:p-294803@yandex.ru) <br>
+- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/768px-Telegram_logo.svg.png" width=16 height=16> Telegram (preferred):<a href="https://t.me/dan_sazonov"> @dan_sazonov</a>  
+- <img src="https://upload.wikimedia.org/wikipedia/commons/2/21/VK.com-logo.svg" width=16 height=16> VK:<a href="https://vk.com/dan_sazonov"> @dan_sazonov</a> 
+- 📩 E-mail: [`dan_sazonov@vk.com`](mailto:/dan_sazonov@vk.com)
 
 ## 📜 Лицензия
-Весь код распространяется по лицензии [GPL-3.0 License](https://github.com/dan-sazonov/MagistrKurskBot/blob/master/legal_info/LICENSE.md).<br>
+Весь код распространяется по лицензии [GPL-3.0 License](https://github.com/dan-sazonov/MagistrKurskBot/LICENSE.md).<br>
 Подробнее смотри в файле.

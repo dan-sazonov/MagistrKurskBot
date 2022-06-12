@@ -1,3 +1,8 @@
+"""
+Обработка апдейтов на уровне фильтров.
+Сами фильры биндятся в dispatcher.py, зачем я так сделал - хороший вопрос, я не помню
+"""
+
 from aiogram import types
 from aiogram.dispatcher.filters import BoundFilter
 
