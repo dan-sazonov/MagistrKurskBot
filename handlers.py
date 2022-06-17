@@ -1,7 +1,7 @@
 """
 Хэндлеры бота
-Этот файл может содержать функции, отвечающие за визуальное отображение и валидацию данных, тексты сообщениий должны
-лежать в файле `messages.py`.
+Этот файл может содержать функции, отвечающие за обработку апдейтов на уровне хэндлеров или валидацию данных,
+тексты сообщениий должны лежать в файле `messages.py`.
 """
 
 import aiogram.dispatcher.filters as dp_filters
@@ -15,11 +15,13 @@ from messages import Messages, Keyboards
 
 log = logger.get_logger(__name__)
 
+# тащим классы сообщений, кнопок и бд (да, это bad practise, спасибо, я знаю)
 messages = Messages()
 keyboards = Keyboards()
 db_main = db.Main()
 
 
+# СЛУЖЕБНЫЕ ХЭНДЛЕРЫ:
 async def on_startup(_):
     log.info('Start polling')
     await bot.send_message(chat_id=config.ADMIN_CHAT, text=messages.start_polling)
@@ -32,6 +34,7 @@ async def on_shutdown(_):
     await bot.send_message(chat_id=config.ADMIN_CHAT, text=messages.stop_polling)
 
 
+# ОСНОВНЫЕ КОМАНДЫ:
 @dp.message_handler(commands=['songs'])
 async def songs_mes(message: types.Message):
     await message.answer(messages.songs, reply_markup=keyboards.get_songs_kb())
@@ -87,6 +90,7 @@ async def help_mes(message: types.Message):
     await message.answer(messages.help, disable_web_page_preview=True)
 
 
+# ЗАГЛУШКИ:
 @dp.message_handler(commands=['santa', 'end'])
 async def outdated_mes(message: types.Message):
     await message.answer(messages.placeholder_santa)
@@ -105,6 +109,7 @@ async def outdated_callback(callback_query: types.CallbackQuery):
     log.info(f'The user clicked on an outdated button: {callback_query.id}')
 
 
+# АДМИНСКИЕ КОМАНДЫ:
 @dp.message_handler(is_admin=True, commands=['test'])
 async def test_state(message: types.Message):
     log.info(f'`{message.from_user.id}` asked the state of the bot')
@@ -159,6 +164,7 @@ async def test_state(message: types.Message):
 Вывод команды <code>get</code> пока что выглядит крайне ужасно, но в обозримом будущем ему будет придан более симпатичный вид.''')
 
 
+# НЕИЗВЕСТНОЕ СООБЩЕНИЕ:
 @dp.message_handler()
 async def unknown_command_mes(message: types.Message):
     await message.reply(messages.not_command)

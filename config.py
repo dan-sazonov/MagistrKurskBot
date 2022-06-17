@@ -16,7 +16,10 @@ DEBUG_MODE = False  # режим отладки, запуск на втором 
 if DEBUG_MODE:
     log.info('Enable debug mode!')
 
-# запрашиваем токены
+# запрашиваем токены из переменных окружения
+# DEV_TOKEN - тестовый бот (@MagistrFatherBot)
+# BOT_TOKEN - основной (@MagistrKurskBot)
+# DATABASE_URL - uri бд
 req = 'DEV_TOKEN' if DEBUG_MODE else 'BOT_TOKEN'
 API_TOKEN = os.getenv(req)
 if not API_TOKEN:

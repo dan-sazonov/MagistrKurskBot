@@ -1,6 +1,6 @@
 """
 Создает и настраивает бота
-Все, что связано с обработкой сообщений, должно быть помещено в `handlers.py`.
+Все, что связано с обработкой сообщений, должно быть раскидано по модулям в зависимости от уровня
 """
 
 import aiogram
@@ -21,4 +21,6 @@ storage = MemoryStorage()
 
 dp = aiogram.Dispatcher(bot, storage=storage)
 dp.middleware.setup(Middle())
+
+# биндим фильтры
 dp.bind_filter(filters.IsAdmin)

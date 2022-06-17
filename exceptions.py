@@ -14,5 +14,8 @@ log = logger.get_logger(__name__)
 class AiogramExc:
     @dp.errors_handler()
     async def errors_handler(self: types.Update, exception: exc.TelegramAPIError):
+        """
+        Универсальный хэндлер, просто логирует все айограмовские варнинги
+        """
         log.warning(f"Uncaught exception: {exception}. update_id: {self['update_id']}")
         return True
